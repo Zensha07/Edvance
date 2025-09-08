@@ -69,7 +69,7 @@
 <body>
   <div class="container">
     <h2>Login</h2>
-    <form id="loginForm" onsubmit="return handleLogin(event)">
+    <form id="loginForm">
       <input type="email" id="email" placeholder="Email" required />
       <input type="password" id="password" placeholder="Password" required />
       <div class="error-msg" id="errorMsg"></div>
@@ -77,37 +77,48 @@
     </form>
     <div class="signin-link" onclick="redirectToSignIn()">Don't have an account? Sign in</div>
   </div>
+
   <script>
     function redirectToSignIn() {
       window.location.href = 'signin.html';
     }
 
-    function handleLogin(event) {
-      event.preventDefault();
+    // Get role from URL query parameter (e.g., login.html?role=student)
+    const urlParams = new URLSearchParams(window.location.search);
+    const role = urlParams.get('role');
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
       const errorMsg = document.getElementById('errorMsg');
       errorMsg.textContent = '';
 
-      // Retrieve stored users
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-
-      // Check if user exists with matching password
-      const user = users.find(u => u.email === email);
-
-      if (!user) {
-        errorMsg.textContent = 'User not found.';
-        return false;
-      }
-      if (user.password !== password) {
-        errorMsg.textContent = 'Incorrect password.';
-        return false;
-      }
-
-      alert('Login successful for ' + email);
-      // Redirect to dashboard or homepage here
-      return true;
-    }
+      fetch('http://127.0.0.1:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      .then(res => {
+        if (res.status === 401) throw 'Invalid email or password';
+        return res.json();
+      })
+      .then(data => {
+        alert(`Login successful as ${data.role}`);
+        // Redirect based on role returned from backend
+        if (data.role === 'student') {
+          window.location.href = 'student_dashboard.html';
+        } else if (data.role === 'teacher') {
+          window.location.href = 'teacher_dashboard.html';
+        } else if (data.role === 'sponsor') {
+          window.location.href = 'sponsor_dashboard.html';
+        }
+      })
+      .catch(err => {
+        errorMsg.textContent = err;
+      });
+    });
   </script>
 </body>
 </html>

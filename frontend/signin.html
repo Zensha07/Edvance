@@ -60,43 +60,54 @@
 <body>
   <div class="container">
     <h2>Sign In</h2>
-    <form id="signinForm" onsubmit="return handleSignIn(event)">
+    <form id="signinForm">
       <input type="email" id="newEmail" placeholder="Enter Email" required />
       <input type="password" id="newPassword" placeholder="Enter Password" required />
       <div class="error-msg" id="errorMsg"></div>
       <button type="submit">Create Account</button>
     </form>
   </div>
+
   <script>
-    function handleSignIn(event) {
-      event.preventDefault();
+    // Function to read user role from URL query parameter, default to 'student'
+    function getRoleFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('role') || 'student';
+    }
+
+    document.getElementById('signinForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
       const email = document.getElementById('newEmail').value.trim();
       const password = document.getElementById('newPassword').value.trim();
       const errorMsg = document.getElementById('errorMsg');
       errorMsg.textContent = '';
 
-      // Basic validation
       if (password.length < 6) {
         errorMsg.textContent = 'Password should be at least 6 characters.';
-        return false;
+        return;
       }
 
-      // Retrieve existing users or initialize
-      let users = JSON.parse(localStorage.getItem('users')) || [];
+      const role = getRoleFromURL();
 
-      // Check if email already registered
-      if (users.some(u => u.email === email)) {
-        errorMsg.textContent = 'Email already registered.';
-        return false;
-      }
-
-      // Add new user
-      users.push({ email, password });
-      localStorage.setItem('users', JSON.stringify(users));
-      alert('Account created successfully! Redirecting to login page.');
-      window.location.href = 'login.html';
-      return true;
-    }
+      fetch('http://127.0.0.1:5000/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message === 'User signed up successfully') {
+          alert('Account created successfully!');
+          window.location.href = 'login.html';
+        } else {
+          errorMsg.textContent = data.message;
+        }
+      })
+      .catch(() => {
+        errorMsg.textContent = 'Server error. Please try again later.';
+      });
+    });
   </script>
 </body>
 </html>
