@@ -170,45 +170,15 @@
   </div>
 
   <script>
-    // Check authentication on page load
-    document.addEventListener('DOMContentLoaded', async function() {
-      const teacher = localStorage.getItem('teacher');
-      if (!teacher) {
-        alert('Please login first');
-        window.location.href = 'teacher_login_auth.html';
-        return;
-      }
-
-      // Verify session with server
-      try {
-        const response = await fetch('http://localhost:5001/api/teacher/me', {
-          credentials: 'include'
-        });
-        
-        if (!response.ok) {
-          localStorage.removeItem('teacher');
-          alert('Session expired. Please login again.');
-          window.location.href = 'teacher_login_auth.html';
-          return;
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        localStorage.removeItem('teacher');
-        alert('Authentication failed. Please login again.');
-        window.location.href = 'teacher_login_auth.html';
-        return;
-      }
-
-      // Load notes after authentication
+    // Load existing notes on page load
+    document.addEventListener('DOMContentLoaded', function() {
       loadNotes();
     });
 
     // Load notes from database
     async function loadNotes() {
       try {
-        const response = await fetch('http://localhost:5001/api/notes', {
-          credentials: 'include'
-        });
+        const response = await fetch('http://localhost:5001/api/notes');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -289,7 +259,6 @@
       try {
         const response = await fetch('http://localhost:5001/api/notes', {
           method: 'POST',
-          credentials: 'include',
           body: formData
         });
 

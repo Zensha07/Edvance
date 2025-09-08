@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Scholarship - Edvance</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      min-height: 100vh;
+      padding: 60px 20px;
+    }
+    .scholarship-container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      width: 500px;
+      max-width: 100%;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 30px;
+      color: #0b3d91;
+      font-weight: 700;
+      font-size: 2.2rem;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #253858;
+      font-size: 1rem;
+    }
+    input[type="text"], input[type="number"], input[type="date"], textarea, select {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border: 2px solid #ccd7e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus, select:focus {
+      border-color: #0b3d91;
+      outline: none;
+      box-shadow: 0 0 8px rgba(11, 61, 145, 0.25);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    button {
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1838a1;
+    }
+    .back-btn {
+      background: #6c757d;
+      margin-bottom: 20px;
+    }
+    .back-btn:hover {
+      background: #5a6268;
+    }
+    .success-message {
+      color: green;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+    .error-message {
+      color: red;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+    .criteria-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .criteria-section h3 {
+      margin-top: 0;
+      color: #0b3d91;
+      font-size: 1.2rem;
+    }
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .optional {
+      color: #6c757d;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+  <div class="scholarship-container">
+    <h2>Create Scholarship Offer</h2>
+    <div id="successMessage" class="success-message">Scholarship created successfully!</div>
+    <div id="errorMessage" class="error-message"></div>
+    
+    <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+    
+    <form id="scholarshipForm">
+      <div class="form-group">
+        <label for="title">Scholarship Title *</label>
+        <input type="text" id="title" name="title" placeholder="e.g., Merit Scholarship for Engineering Students" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea id="description" name="description" placeholder="Describe the scholarship, its purpose, and any additional requirements..." required></textarea>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="amount">Scholarship Amount (₹) *</label>
+          <input type="number" id="amount" name="amount" placeholder="50000" required min="0" />
+        </div>
+        <div class="form-group">
+          <label for="currency">Currency</label>
+          <select id="currency" name="currency">
+            <option value="INR">INR (₹)</option>
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="applicationDeadline">Application Deadline *</label>
+        <input type="date" id="applicationDeadline" name="applicationDeadline" required />
+      </div>
+      
+      <div class="criteria-section">
+        <h3>Eligibility Criteria</h3>
+        <p class="optional">Leave fields empty if no specific criteria required</p>
+        
+        <div class="form-group">
+          <label for="genderCriteria">Gender Preference</label>
+          <select id="genderCriteria" name="genderCriteria">
+            <option value="">Any Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="familyIncomeMax">Maximum Family Income (₹) <span class="optional">- Students with family income below this amount</span></label>
+          <input type="number" id="familyIncomeMax" name="familyIncomeMax" placeholder="500000" min="0" />
+        </div>
+        
+        <div class="form-group">
+          <label for="locationType">Location Preference</label>
+          <select id="locationType" name="locationType">
+            <option value="">Any Location</option>
+            <option value="Rural">Rural</option>
+            <option value="Urban">Urban</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="minAcademicPercentage">Minimum Academic Percentage <span class="optional">- Students must have scored above this percentage in last academic year</span></label>
+          <input type="number" id="minAcademicPercentage" name="minAcademicPercentage" placeholder="90" min="0" max="100" step="0.1" />
+        </div>
+      </div>
+      
+      <button type="submit">Create Scholarship</button>
+    </form>
+  </div>
+
+  <script>
+    const scholarshipForm = document.getElementById('scholarshipForm');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Set minimum date to today
+    document.getElementById('applicationDeadline').min = new Date().toISOString().split('T')[0];
+
+    // Form submission
+    scholarshipForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Hide previous messages
+      successMessage.style.display = 'none';
+      errorMessage.style.display = 'none';
+
+      // Collect form data
+      const formData = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        amount: parseFloat(document.getElementById('amount').value),
+        currency: document.getElementById('currency').value,
+        application_deadline: document.getElementById('applicationDeadline').value,
+        gender_criteria: document.getElementById('genderCriteria').value || null,
+        family_income_max: document.getElementById('familyIncomeMax').value ? parseFloat(document.getElementById('familyIncomeMax').value) : null,
+        location_type: document.getElementById('locationType').value || null,
+        min_academic_percentage: document.getElementById('minAcademicPercentage').value ? parseFloat(document.getElementById('minAcademicPercentage').value) : null
+      };
+
+      try {
+        const response = await fetch('http://localhost:5001/api/scholarships', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          successMessage.style.display = 'block';
+          successMessage.textContent = result.message;
+          
+          // Reset form after successful submission
+          setTimeout(() => {
+            scholarshipForm.reset();
+            successMessage.style.display = 'none';
+          }, 3000);
+        } else {
+          errorMessage.textContent = 'Error: ' + result.message;
+          errorMessage.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        errorMessage.textContent = 'Error creating scholarship: ' + error.message + '. Please make sure the Flask server is running on port 5001.';
+        errorMessage.style.display = 'block';
+      }
+    });
+
+    function goBack() {
+      window.location.href = 'sponsor_dashboard.html';
+    }
+  </script>
+</body>
+</html>

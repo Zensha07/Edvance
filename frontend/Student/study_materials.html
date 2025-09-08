@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Study Materials - Edvance</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #0b3d91 0%, #1838a1 100%);
+      color: white;
+      padding: 40px 36px 60px 36px;
+      font-size: 2.8rem;
+      font-weight: 700;
+      user-select: none;
+      box-shadow: 0 4px 8px rgba(11, 61, 145, 0.6);
+      letter-spacing: 1.4px;
+      display: flex;
+      align-items: center;
+    }
+    .back-link {
+      margin-right: 20px;
+      font-size: 1.6rem;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 10px 18px;
+      border-radius: 4px;
+      user-select: none;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-link:hover {
+      background-color: rgba(255,255,255,0.15);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .filters {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .filters h2 {
+      color: #0b3d91;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+    .filter-row {
+      display: flex;
+      gap: 20px;
+      align-items: end;
+      flex-wrap: wrap;
+    }
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+    .filter-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ccd7e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+    .filter-group select:focus {
+      outline: none;
+      border-color: #0b3d91;
+      box-shadow: 0 0 7px rgba(11, 61, 145, 0.25);
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background-color: #0b3d91;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #1838a1;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+    }
+    .material-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .material-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    .material-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .material-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 1.5rem;
+    }
+    .notes-icon {
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      color: white;
+    }
+    .videos-icon {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+    }
+    .material-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #0b3d91;
+      margin: 0;
+    }
+    .material-meta {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+    .material-topic {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .material-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-small {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+    .no-materials {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-size: 1.2rem;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 1.1rem;
+    }
+    .error {
+      text-align: center;
+      padding: 40px;
+      color: #e74c3c;
+      font-size: 1.1rem;
+    }
+    @media (max-width: 768px) {
+      .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-buttons {
+        justify-content: center;
+      }
+      .materials-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="student_dashboard.html" class="back-link">← Back</a>
+    <div>Study Materials</div>
+  </header>
+
+  <div class="container">
+    <!-- Filters Section -->
+    <div class="filters">
+      <h2>Filter Study Materials</h2>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="standardFilter">Standard</label>
+          <select id="standardFilter">
+            <option value="">All Standards</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="subjectFilter">Subject</label>
+          <select id="subjectFilter">
+            <option value="">All Subjects</option>
+          </select>
+        </div>
+        <div class="filter-buttons">
+          <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+          <button class="btn btn-secondary" onclick="clearFilters()">Clear All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Materials Grid -->
+    <div id="materialsContainer">
+      <div class="loading">Loading study materials...</div>
+    </div>
+  </div>
+
+  <script>
+    let allMaterials = [];
+    let currentFilters = {
+      standard: '',
+      subject: ''
+    };
+
+    // Load page
+    document.addEventListener('DOMContentLoaded', function() {
+      loadFilters();
+      loadMaterials();
+    });
+
+    // Load filter options
+    async function loadFilters() {
+      try {
+        const response = await fetch('http://localhost:5001/api/study-materials/filters');
+        const data = await response.json();
+        
+        const standardSelect = document.getElementById('standardFilter');
+        const subjectSelect = document.getElementById('subjectFilter');
+        
+        // Populate standards
+        data.standards.forEach(standard => {
+          const option = document.createElement('option');
+          option.value = standard;
+          option.textContent = standard;
+          standardSelect.appendChild(option);
+        });
+        
+        // Populate subjects
+        data.subjects.forEach(subject => {
+          const option = document.createElement('option');
+          option.value = subject;
+          option.textContent = subject;
+          subjectSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading filters:', error);
+      }
+    }
+
+    // Load study materials
+    async function loadMaterials() {
+      try {
+        const container = document.getElementById('materialsContainer');
+        container.innerHTML = '<div class="loading">Loading study materials...</div>';
+        
+        const params = new URLSearchParams();
+        if (currentFilters.standard) params.append('standard', currentFilters.standard);
+        if (currentFilters.subject) params.append('subject', currentFilters.subject);
+        
+        const response = await fetch(`http://localhost:5001/api/study-materials?${params}`);
+        const data = await response.json();
+        
+        allMaterials = data.materials;
+        displayMaterials(allMaterials);
+      } catch (error) {
+        console.error('Error loading materials:', error);
+        document.getElementById('materialsContainer').innerHTML = 
+          '<div class="error">Error loading study materials. Please try again.</div>';
+      }
+    }
+
+    // Display materials
+    function displayMaterials(materials) {
+      const container = document.getElementById('materialsContainer');
+      
+      if (materials.length === 0) {
+        container.innerHTML = '<div class="no-materials">No study materials found. Try adjusting your filters.</div>';
+        return;
+      }
+      
+      container.innerHTML = '<div class="materials-grid">' +
+        materials.map(material => `
+          <div class="material-card">
+            <div class="material-header">
+              <div class="material-icon ${material.type === 'notes' ? 'notes-icon' : 'videos-icon'}">
+                ${material.type === 'notes' ? '📄' : '🎥'}
+              </div>
+              <h3 class="material-title">${material.type === 'notes' ? 'Lecture Notes' : 'Video Lecture'}</h3>
+            </div>
+            <div class="material-meta">
+              ${material.standard} • ${material.subject}
+              <br>
+              <small>Uploaded: ${new Date(material.uploaded_at).toLocaleDateString()}</small>
+            </div>
+            <div class="material-topic">${material.topic}</div>
+            <div class="material-actions">
+              ${material.type === 'notes' ? 
+                `<button class="btn btn-primary btn-small" onclick="downloadMaterial('${material.download_url}')">Download PDF</button>` :
+                `<button class="btn btn-primary btn-small" onclick="viewVideo('${material.stream_url}')">Watch Video</button>`
+              }
+            </div>
+          </div>
+        `).join('') +
+        '</div>';
+    }
+
+    // Apply filters
+    function applyFilters() {
+      currentFilters.standard = document.getElementById('standardFilter').value;
+      currentFilters.subject = document.getElementById('subjectFilter').value;
+      loadMaterials();
+    }
+
+    // Clear filters
+    function clearFilters() {
+      document.getElementById('standardFilter').value = '';
+      document.getElementById('subjectFilter').value = '';
+      currentFilters.standard = '';
+      currentFilters.subject = '';
+      loadMaterials();
+    }
+
+    // Download material
+    function downloadMaterial(url) {
+      window.open(`http://localhost:5001${url}`, '_blank');
+    }
+
+    // View video
+    function viewVideo(url) {
+      window.open(`http://localhost:5001${url}`, '_blank');
+    }
+  </script>
+</body>
+</html>

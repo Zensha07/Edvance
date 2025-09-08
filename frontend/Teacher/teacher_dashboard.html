@@ -202,40 +202,6 @@
     </div>
   </main>
   <script>
-    // Check authentication on page load
-    window.addEventListener('load', async () => {
-      const teacher = localStorage.getItem('teacher');
-      if (!teacher) {
-        alert('Please login first');
-        window.location.href = 'teacher_login_auth.html';
-        return;
-      }
-
-      // Verify session with server
-      try {
-        const response = await fetch('http://localhost:5001/api/teacher/me', {
-          credentials: 'include'
-        });
-        
-        if (!response.ok) {
-          localStorage.removeItem('teacher');
-          alert('Session expired. Please login again.');
-          window.location.href = 'teacher_login_auth.html';
-          return;
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        localStorage.removeItem('teacher');
-        alert('Authentication failed. Please login again.');
-        window.location.href = 'teacher_login_auth.html';
-        return;
-      }
-
-      // Display teacher name in header
-      const teacherData = JSON.parse(teacher);
-      const headerTitle = document.querySelector('header div:last-child');
-      headerTitle.textContent = `Welcome, ${teacherData.name}`;
-    });
 
     const dropdown = document.getElementById('dashboardDropdown');
     const dropbtn = dropdown.querySelector('.dropbtn');
@@ -264,19 +230,9 @@
     function goToUploadLectures() {
       window.location.href = 'upload_lectures.html';
     }
-    async function logout() {
-      try {
-        await fetch('http://localhost:5001/api/teacher/logout', {
-          method: 'POST',
-          credentials: 'include'
-        });
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-      
-      localStorage.removeItem('teacher');
-      alert('Logged out successfully');
-      window.location.href = 'teacher_login_auth.html';
+    function logout() {
+      alert('Logging out...');
+      window.location.href = 'login_teacher.html';
     }
 
     // Dropdown menu item event listeners

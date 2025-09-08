@@ -227,7 +227,7 @@
     window.location.href = 'student_profile.html';
   }
   function goToAvailableScholarship() {
-    window.location.href = 'available_scholarship.html';
+    window.location.href = 'available_scholarships.html';
   }
   function goToCareerCounselling() {
     window.location.href = 'career_counselling.html';
@@ -236,9 +236,14 @@
     window.location.href = 'study_materials.html';
   }
   function logout() {
-    alert('Logging out...');
-    // Clear session/tokens here
-    window.location.href = 'login.html';
+    if (confirm('Are you sure you want to logout?')) {
+      // Clear any stored data
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      alert('Logged out successfully!');
+      window.location.href = 'login_student.html';
+    }
   }
 
   // Dropdown menu event listeners

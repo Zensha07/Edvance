@@ -149,8 +149,13 @@
 </head>
 <body>
 <div class="container">
-  <button id="backBtn" onclick="prevStep()" style="display:none;">← Back</button>
-  <h1 id="stepTitle">Step 1: Personal Profile</h1>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <button id="backBtn" onclick="prevStep()" style="display:none;">← Back</button>
+    <h1 id="stepTitle" style="margin: 0;">Step 1: Personal Profile</h1>
+    <button onclick="cancelEdit()" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer;">
+      Cancel Edit
+    </button>
+  </div>
   <div class="progress-container" aria-label="Progress">
     <div id="progressBar" class="progress-bar"></div>
   </div>
@@ -384,12 +389,310 @@
   }
   
   function editProfile() {
-    // Reload the page to show the form
-    window.location.reload();
+    console.log('Edit profile clicked');
+    // Load existing profile data into the form
+    loadProfileIntoForm();
+  }
+  
+  function loadProfileIntoForm() {
+    console.log('Loading profile into form...');
+    // Fetch existing profile data and populate the form
+    fetch('http://localhost:5001/api/student/profile')
+      .then(response => response.json())
+      .then(result => {
+        console.log('Profile data received:', result);
+        if (result.profile) {
+          const profile = result.profile;
+          
+          // Populate personal data
+          if (profile.personal) {
+            document.getElementById('name').value = profile.personal.name || '';
+            document.getElementById('fatherName').value = profile.personal.fatherName || '';
+            document.getElementById('motherName').value = profile.personal.motherName || '';
+            document.getElementById('dob').value = profile.personal.dob || '';
+            document.getElementById('contact').value = profile.personal.contact || '';
+            document.getElementById('parentContact').value = profile.personal.parentContact || '';
+            document.getElementById('financial').value = profile.personal.financial || '';
+          }
+          
+          // Populate academic data
+          if (profile.academic) {
+            const status = profile.academic.status;
+            if (status === 'School') {
+              document.getElementById('schoolRadio').checked = true;
+              document.getElementById('schoolSection').style.display = 'block';
+              document.getElementById('collegeSection').style.display = 'none';
+              document.getElementById('schoolName').value = profile.academic.schoolName || '';
+              document.getElementById('schoolState').value = profile.academic.schoolState || '';
+              document.getElementById('schoolClass').value = profile.academic.schoolClass || '';
+              document.getElementById('schoolPercent').value = profile.academic.schoolPercent || '';
+              document.getElementById('schoolDesc').value = profile.academic.schoolDesc || '';
+            } else if (status === 'College') {
+              document.getElementById('collegeRadio').checked = true;
+              document.getElementById('collegeSection').style.display = 'block';
+              document.getElementById('schoolSection').style.display = 'none';
+              document.getElementById('collegeName').value = profile.academic.collegeName || '';
+              document.getElementById('collegeState').value = profile.academic.collegeState || '';
+              document.getElementById('collegeCourse').value = profile.academic.collegeCourse || '';
+              document.getElementById('collegeYear').value = profile.academic.collegeYear || '';
+              document.getElementById('class10Perc').value = profile.academic.class10Perc || '';
+              document.getElementById('class12Perc').value = profile.academic.class12Perc || '';
+              
+              // Show additional percentage fields for college
+              document.getElementById('additionalPerc').style.display = 'block';
+            }
+          }
+          
+          // Populate residential data
+          if (profile.residential) {
+            document.getElementById('resState').value = profile.residential.state || '';
+            
+            // Trigger city dropdown update
+            const state = profile.residential.state;
+            if (state && cityByState[state]) {
+              const resCity = document.getElementById('resCity');
+              resCity.innerHTML = '<option value="">Select City</option>';
+              cityByState[state].forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                resCity.appendChild(option);
+              });
+              
+              // Set city after options are loaded
+              setTimeout(() => {
+                document.getElementById('resCity').value = profile.residential.city || '';
+              }, 100);
+            }
+            
+            document.getElementById('addressDesc').value = profile.residential.addressDesc || '';
+            document.getElementById('pincode').value = profile.residential.pincode || '';
+          }
+          
+          // Show the form and hide profile display
+          document.querySelector('.container').innerHTML = originalFormHTML;
+          
+          // Re-initialize the form after replacing HTML
+          setTimeout(() => {
+            initializeForm();
+          }, 100);
+        }
+      })
+      .catch(error => {
+        console.error('Error loading profile:', error);
+        // If error, just reload the page
+        window.location.reload();
+      });
+  }
+  
+  // Store original form HTML
+  const originalFormHTML = document.querySelector('.container').innerHTML;
+  
+  function initializeForm() {
+    // Re-attach all event listeners after form replacement
+    setupFormEventListeners();
+  }
+  
+  function setupFormEventListeners() {
+    // Re-attach all the existing event listeners
+    // This is a simplified version - in a real app, you'd want to be more systematic
+    
+    // Step 1 - Personal details
+    const step1Form = document.getElementById('step1');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (step1Form && nextBtn) {
+      step1Form.addEventListener('input', () => {
+        nextBtn.disabled = !step1Form.checkValidity();
+      });
+      
+      nextBtn.onclick = () => {
+        if (!step1Form.checkValidity()) {
+          step1Form.reportValidity();
+          return;
+        }
+        const personalData = {
+          name: document.getElementById('name').value,
+          fatherName: document.getElementById('fatherName').value,
+          motherName: document.getElementById('motherName').value,
+          dob: document.getElementById('dob').value,
+          contact: document.getElementById('contact').value,
+          parentContact: document.getElementById('parentContact').value,
+          financial: document.getElementById('financial').value
+        };
+        localStorage.setItem('profileData', JSON.stringify(personalData));
+        showStep(2);
+      };
+    }
+    
+    // Step 2 - Academic details
+    const schoolRadio = document.getElementById('schoolRadio');
+    const collegeRadio = document.getElementById('collegeRadio');
+    const schoolSection = document.getElementById('schoolSection');
+    const collegeSection = document.getElementById('collegeSection');
+    
+    if (schoolRadio && collegeRadio) {
+      schoolRadio.addEventListener('change', () => {
+        schoolSection.style.display = 'block';
+        collegeSection.style.display = 'none';
+      });
+      
+      collegeRadio.addEventListener('change', () => {
+        schoolSection.style.display = 'none';
+        collegeSection.style.display = 'block';
+        document.getElementById('additionalPerc').style.display = 'block';
+      });
+    }
+    
+    // School form
+    const schoolForm = document.getElementById('schoolSection');
+    const saveSchoolBtn = document.getElementById('saveSchoolBtn');
+    
+    if (schoolForm && saveSchoolBtn) {
+      schoolForm.addEventListener('input', () => {
+        saveSchoolBtn.disabled = !schoolForm.checkValidity();
+      });
+      
+      saveSchoolBtn.onclick = () => {
+        if (!schoolForm.checkValidity()) {
+          schoolForm.reportValidity();
+          return;
+        }
+        const academicData = {
+          status: 'School',
+          schoolName: document.getElementById('schoolName').value,
+          schoolState: document.getElementById('schoolState').value,
+          schoolClass: document.getElementById('schoolClass').value,
+          schoolPercent: document.getElementById('schoolPercent').value,
+          schoolDesc: document.getElementById('schoolDesc').value
+        };
+        localStorage.setItem('academicData', JSON.stringify(academicData));
+        showStep(3);
+      };
+    }
+    
+    // College form
+    const collegeForm = document.getElementById('collegeSection');
+    const saveCollegeBtn = document.getElementById('saveCollegeBtn');
+    
+    if (collegeForm && saveCollegeBtn) {
+      collegeForm.addEventListener('input', () => {
+        saveCollegeBtn.disabled = !collegeForm.checkValidity();
+      });
+      
+      saveCollegeBtn.onclick = () => {
+        if (!collegeForm.checkValidity()) {
+          collegeForm.reportValidity();
+          return;
+        }
+        const academicData = {
+          status: 'College',
+          collegeName: document.getElementById('collegeName').value,
+          collegeState: document.getElementById('collegeState').value,
+          collegeCourse: document.getElementById('collegeCourse').value,
+          collegeYear: document.getElementById('collegeYear').value,
+          class10Perc: document.getElementById('class10Perc').value,
+          class12Perc: document.getElementById('class12Perc').value
+        };
+        localStorage.setItem('academicData', JSON.stringify(academicData));
+        showStep(3);
+      };
+    }
+    
+    // Step 3 - Residential details
+    const step3Form = document.getElementById('step3');
+    const resState = document.getElementById('resState');
+    const resCity = document.getElementById('resCity');
+    const finishBtn = document.getElementById('finishBtn');
+    
+    if (resState && resCity) {
+      resState.addEventListener('change', () => {
+        const state = resState.value;
+        resCity.innerHTML = '<option value="">Select City</option>';
+        if(cityByState[state]){
+          cityByState[state].forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.textContent = city;
+            resCity.appendChild(option);
+          });
+        }
+      });
+    }
+    
+    if (step3Form && finishBtn) {
+      step3Form.addEventListener('input', () => {
+        finishBtn.disabled = !step3Form.checkValidity();
+      });
+      
+      finishBtn.onclick = async () => {
+        if(!step3Form.checkValidity()){
+          step3Form.reportValidity();
+          return;
+        }
+        const residentialData = {
+          state: resState.value,
+          city: resCity.value,
+          addressDesc: document.getElementById('addressDesc').value,
+          pincode: document.getElementById('pincode').value
+        };
+        
+        // Get all data from localStorage
+        const personalData = JSON.parse(localStorage.getItem('profileData') || '{}');
+        const academicData = JSON.parse(localStorage.getItem('academicData') || '{}');
+        
+        // Save to database
+        try {
+          const response = await fetch('http://localhost:5001/api/student/profile', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              personal: personalData,
+              academic: academicData,
+              residential: residentialData
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const result = await response.json();
+          if (result.success) {
+            alert('Profile updated successfully!');
+            // Clear localStorage after successful save
+            localStorage.removeItem('profileData');
+            localStorage.removeItem('academicData');
+            localStorage.removeItem('residentialData');
+            // Reload to show updated profile
+            window.location.reload();
+          } else {
+            alert('Error saving profile: ' + result.message);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error saving profile: ' + error.message + '. Please make sure the Flask server is running on port 5001.');
+        }
+      };
+    }
   }
   
   function goBack() {
     window.location.href = 'student_dashboard.html';
+  }
+  
+  function cancelEdit() {
+    if (confirm('Are you sure you want to cancel editing? Any unsaved changes will be lost.')) {
+      // Clear any temporary data
+      localStorage.removeItem('profileData');
+      localStorage.removeItem('academicData');
+      localStorage.removeItem('residentialData');
+      
+      // Reload to show the profile display
+      window.location.reload();
+    }
   }
   
   // Check for existing profile when page loads

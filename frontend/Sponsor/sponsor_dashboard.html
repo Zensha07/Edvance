@@ -203,7 +203,7 @@
   </main>
 
   <script>
-    let profileCompleted = false; // Toggle for example profile state
+    // Profile completion check removed - users can add sponsorship without completing profile
 
     // Dropdown Menu toggle
     const dropdown = document.getElementById('dashboardDropdown');
@@ -229,12 +229,7 @@
       window.location.href = 'sponsor_profile.html';
     }
     function goToAddSponsorship() {
-      if (!profileCompleted) {
-        alert('Please complete your profile before adding sponsorships.');
-        goToProfile();
-      } else {
-        window.location.href = 'add_sponsorship.html';
-      }
+      window.location.href = 'add_scholarship.html';
     }
     function goToStudentApproaches() {
       window.location.href = 'student_approaches.html';

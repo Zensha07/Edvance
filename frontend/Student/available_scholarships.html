@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Available Scholarships - Edvance</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header {
+      background: linear-gradient(90deg, #0b3d91 0%, #1838a1 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease;
+    }
+    .back-btn:hover {
+      background: #5a6268;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .filter-section {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .filter-section h3 {
+      margin-top: 0;
+      color: #0b3d91;
+      font-size: 1.3rem;
+    }
+    .filter-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: end;
+    }
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #253858;
+    }
+    .filter-group input, .filter-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ccd7e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    .filter-group input:focus, .filter-group select:focus {
+      border-color: #0b3d91;
+      outline: none;
+      box-shadow: 0 0 8px rgba(11, 61, 145, 0.25);
+    }
+    .filter-btn {
+      background: #0b3d91;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      height: fit-content;
+    }
+    .filter-btn:hover {
+      background: #1838a1;
+    }
+    .scholarships-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+    }
+    .scholarship-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .scholarship-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    .scholarship-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 15px;
+    }
+    .scholarship-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0b3d91;
+      margin: 0;
+      flex: 1;
+    }
+    .scholarship-amount {
+      background: #28a745;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      white-space: nowrap;
+    }
+    .scholarship-description {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .scholarship-details {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .detail-item:last-child {
+      margin-bottom: 0;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #0b3d91;
+    }
+    .detail-value {
+      color: #333;
+    }
+    .sponsor-info {
+      background: #e3f2fd;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .sponsor-name {
+      font-weight: 600;
+      color: #0b3d91;
+    }
+    .deadline {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      color: #856404;
+    }
+    .no-scholarships {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    .no-scholarships h3 {
+      color: #0b3d91;
+      margin-bottom: 10px;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    .criteria-badge {
+      display: inline-block;
+      background: #007bff;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin: 2px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e9ecef;
+    }
+    .modal-header h3 {
+      margin: 0;
+      color: #0b3d91;
+      font-size: 1.5rem;
+    }
+    .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover {
+      color: #000;
+    }
+    .modal-body {
+      margin-bottom: 20px;
+    }
+    .modal-body textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ccd7e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 100px;
+      box-sizing: border-box;
+    }
+    .modal-body textarea:focus {
+      border-color: #0b3d91;
+      outline: none;
+      box-shadow: 0 0 8px rgba(11, 61, 145, 0.25);
+    }
+    .modal-footer {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+    }
+    .modal-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .modal-btn.primary {
+      background: #0b3d91;
+      color: white;
+    }
+    .modal-btn.primary:hover {
+      background: #1838a1;
+    }
+    .modal-btn.secondary {
+      background: #6c757d;
+      color: white;
+    }
+    .modal-btn.secondary:hover {
+      background: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Available Scholarships</h1>
+      <p>Find scholarships that match your profile and academic achievements</p>
+    </div>
+    
+    <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+    
+    <div class="filter-section">
+      <h3>Filter Scholarships</h3>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="">Any Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="familyIncome">Family Income (₹)</label>
+          <input type="number" id="familyIncome" placeholder="Enter your family income" min="0" />
+        </div>
+        <div class="filter-group">
+          <label for="locationType">Location</label>
+          <select id="locationType">
+            <option value="">Any Location</option>
+            <option value="Rural">Rural</option>
+            <option value="Urban">Urban</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="academicPercentage">Academic Percentage</label>
+          <input type="number" id="academicPercentage" placeholder="Enter your percentage" min="0" max="100" step="0.1" />
+        </div>
+        <button class="filter-btn" onclick="filterScholarships()">Find Scholarships</button>
+      </div>
+    </div>
+    
+    <div id="loadingMessage" class="loading" style="display: none;">
+      <h3>Loading scholarships...</h3>
+    </div>
+    
+    <div id="noScholarshipsMessage" class="no-scholarships" style="display: none;">
+      <h3>No scholarships found</h3>
+      <p>No scholarships match your criteria. Try adjusting your filters or check back later for new opportunities.</p>
+    </div>
+    
+    <div id="scholarshipsContainer" class="scholarships-grid">
+      <!-- Scholarships will be loaded here -->
+    </div>
+  </div>
+
+  <!-- Application Modal -->
+  <div id="applicationModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Apply for Scholarship</h3>
+        <span class="close" onclick="closeApplicationModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p id="modalDescription">Write a message to the sponsor explaining why you should be considered for this scholarship:</p>
+        <textarea id="applicationMessage" placeholder="Tell the sponsor about your academic achievements, financial need, career goals, and why you deserve this scholarship..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn secondary" onclick="closeApplicationModal()">Cancel</button>
+        <button class="modal-btn primary" onclick="submitApplication()">Submit Application</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let allScholarships = [];
+    let filteredScholarships = [];
+    let generalScholarships = [];
+
+    // General scholarships that were previously available
+    const generalScholarshipsData = [
+      {
+        id: 'general_1',
+        title: "Kotak Kanya Scholarship",
+        description: "Supports academically outstanding girl students from underprivileged backgrounds pursuing professional degrees like engineering, medicine, law, and design. Helps reduce financial barriers to high-quality education.",
+        amount: 150000,
+        currency: "INR",
+        sponsor_name: "Kotak Foundation",
+        company_name: "Kotak Mahindra Bank",
+        application_deadline: "2024-12-31",
+        applyLink: "https://www.buddy4study.com/article/kotak-kanya-scholarship",
+        type: "general"
+      },
+      {
+        id: 'general_2',
+        title: "Infosys Foundation STEM Stars Scholarship",
+        description: "For female students pursuing STEM undergraduate degrees at top institutions. Covers tuition, living costs, and academic expenses to encourage girls in technology and engineering fields.",
+        amount: 100000,
+        currency: "INR",
+        sponsor_name: "Infosys Foundation",
+        company_name: "Infosys Limited",
+        application_deadline: "2024-12-31",
+        applyLink: "https://www.infosys.com/newsroom/press-releases/2023/launch-stem-scholarship-program.html",
+        type: "general"
+      },
+      {
+        id: 'general_3',
+        title: "L'Oréal India For Young Women in Science Scholarship",
+        description: "Supports meritorious girls in science stream pursuing higher education in scientific fields, promoting careers in research and healthcare.",
+        amount: 100000,
+        currency: "INR",
+        sponsor_name: "L'Oréal India",
+        company_name: "L'Oréal India",
+        application_deadline: "2024-12-31",
+        applyLink: "https://www.buddy4study.com/page/loreal-india-for-young-women-in-science-scholarships",
+        type: "general"
+      },
+      {
+        id: 'general_4',
+        title: "Dr. Reddy's Foundation Sashakt Scholarship",
+        description: "Empowers female students from economically weaker sections pursuing UG degrees in sciences, engineering, or medicine by providing financial support.",
+        amount: 80000,
+        currency: "INR",
+        sponsor_name: "Dr. Reddy's Foundation",
+        company_name: "Dr. Reddy's Laboratories",
+        application_deadline: "2024-12-31",
+        applyLink: "https://www.sashaktscholarship.org/",
+        type: "general"
+      },
+      {
+        id: 'general_5',
+        title: "Legrand Empowering Scholarship Program",
+        description: "For meritorious and disadvantaged girls, including differently-abled and affected by hardships, supporting professional degrees in fields like engineering and architecture.",
+        amount: 60000,
+        currency: "INR",
+        sponsor_name: "Legrand Foundation",
+        company_name: "Legrand India",
+        application_deadline: "2024-12-31",
+        applyLink: "https://www.buddy4study.com/page/legrand-empowering-scholarship-program",
+        type: "general"
+      },
+      {
+        id: 'general_6',
+        title: "AICTE Pragati Scholarship for Girls",
+        description: "Supports girl students in technical diploma and degree courses with financial aid to cover tuition and other education-related expenses.",
+        amount: 50000,
+        currency: "INR",
+        sponsor_name: "AICTE",
+        company_name: "All India Council for Technical Education",
+        application_deadline: "2024-12-31",
+        applyLink: "https://www.aicte.gov.in/schemes/students-development-schemes/Pragati/General-Instructions",
+        type: "general"
+      },
+      {
+        id: 'general_7',
+        title: "Amazon Future Engineer Scholarship for Girls",
+        description: "For girls pursuing computer science engineering, from economically weaker backgrounds. Combines financial support with mentorship.",
+        amount: 50000,
+        currency: "INR",
+        sponsor_name: "Amazon India",
+        company_name: "Amazon India",
+        application_deadline: "2024-12-31",
+        applyLink: "https://www.amazonfutureengineer.in/scholarship-and-internship",
+        type: "general"
+      },
+      {
+        id: 'general_8',
+        title: "Reliance Foundation Undergraduate Scholarship",
+        description: "Merit-cum-means scholarship with focus on girls and differently-abled students pursuing undergraduate professional courses.",
+        amount: 200000,
+        currency: "INR",
+        sponsor_name: "Reliance Foundation",
+        company_name: "Reliance Industries",
+        application_deadline: "2024-12-31",
+        applyLink: "https://scholarships.reliancefoundation.org/UG_Scholarship.aspx",
+        type: "general"
+      }
+    ];
+
+    // Load scholarships on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadAllScholarships();
+    });
+
+    async function loadAllScholarships() {
+      try {
+        document.getElementById('loadingMessage').style.display = 'block';
+        document.getElementById('noScholarshipsMessage').style.display = 'none';
+        
+        // Load sponsor-created scholarships from API
+        let sponsorScholarships = [];
+        try {
+          const response = await fetch('http://localhost:5001/api/scholarships');
+          const result = await response.json();
+          
+          if (result.success) {
+            sponsorScholarships = result.scholarships.map(scholarship => ({
+              ...scholarship,
+              type: "sponsor"
+            }));
+          }
+        } catch (error) {
+          console.error('Error loading sponsor scholarships:', error);
+        }
+        
+        // Combine general and sponsor scholarships
+        allScholarships = [...generalScholarshipsData, ...sponsorScholarships];
+        filteredScholarships = allScholarships;
+        displayScholarships(filteredScholarships);
+        
+      } catch (error) {
+        console.error('Error:', error);
+        showNoScholarships();
+      } finally {
+        document.getElementById('loadingMessage').style.display = 'none';
+      }
+    }
+
+    async function filterScholarships() {
+      const gender = document.getElementById('gender').value;
+      const familyIncome = document.getElementById('familyIncome').value;
+      const locationType = document.getElementById('locationType').value;
+      const academicPercentage = document.getElementById('academicPercentage').value;
+
+      // If no filters are applied, show all scholarships
+      if (!gender && !familyIncome && !locationType && !academicPercentage) {
+        filteredScholarships = allScholarships;
+        displayScholarships(filteredScholarships);
+        return;
+      }
+
+      try {
+        document.getElementById('loadingMessage').style.display = 'block';
+        
+        // Filter sponsor scholarships using API
+        let sponsorScholarships = [];
+        try {
+          const response = await fetch('http://localhost:5001/api/scholarships/eligible', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              gender: gender || null,
+              family_income: familyIncome ? parseFloat(familyIncome) : null,
+              location_type: locationType || null,
+              academic_percentage: academicPercentage ? parseFloat(academicPercentage) : null
+            })
+          });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            sponsorScholarships = result.scholarships.map(scholarship => ({
+              ...scholarship,
+              type: "sponsor"
+            }));
+          }
+        } catch (error) {
+          console.error('Error filtering sponsor scholarships:', error);
+        }
+        
+        // Filter general scholarships based on criteria
+        let filteredGeneralScholarships = generalScholarshipsData.filter(scholarship => {
+          // For general scholarships, we'll show them all since they don't have specific criteria
+          // In a real application, you might want to add more sophisticated filtering
+          return true;
+        });
+        
+        // Combine filtered results
+        filteredScholarships = [...filteredGeneralScholarships, ...sponsorScholarships];
+        displayScholarships(filteredScholarships);
+        
+      } catch (error) {
+        console.error('Error:', error);
+        showNoScholarships();
+      } finally {
+        document.getElementById('loadingMessage').style.display = 'none';
+      }
+    }
+
+    function displayScholarships(scholarships) {
+      const container = document.getElementById('scholarshipsContainer');
+      
+      if (scholarships.length === 0) {
+        showNoScholarships();
+        return;
+      }
+
+      container.innerHTML = scholarships.map(scholarship => `
+        <div class="scholarship-card">
+          <div class="scholarship-header">
+            <h3 class="scholarship-title">${scholarship.title}</h3>
+            <div class="scholarship-amount">₹${parseFloat(scholarship.amount).toLocaleString()}</div>
+          </div>
+          
+          <div class="scholarship-description">
+            ${scholarship.description}
+          </div>
+          
+          <div class="sponsor-info">
+            <div class="sponsor-name">${scholarship.sponsor_name}</div>
+            <div style="color: #666; font-size: 0.9rem;">${scholarship.company_name}</div>
+            ${scholarship.type === 'sponsor' ? '<div class="criteria-badge">Sponsored</div>' : '<div class="criteria-badge">General</div>'}
+          </div>
+          
+          ${scholarship.type === 'sponsor' ? `
+            <div class="scholarship-details">
+              ${scholarship.gender_criteria ? `
+                <div class="detail-item">
+                  <span class="detail-label">Gender:</span>
+                  <span class="detail-value">${scholarship.gender_criteria}</span>
+                </div>
+              ` : ''}
+              ${scholarship.family_income_max ? `
+                <div class="detail-item">
+                  <span class="detail-label">Max Family Income:</span>
+                  <span class="detail-value">₹${parseFloat(scholarship.family_income_max).toLocaleString()}</span>
+                </div>
+              ` : ''}
+              ${scholarship.location_type ? `
+                <div class="detail-item">
+                  <span class="detail-label">Location:</span>
+                  <span class="detail-value">${scholarship.location_type}</span>
+                </div>
+              ` : ''}
+              ${scholarship.min_academic_percentage ? `
+                <div class="detail-item">
+                  <span class="detail-label">Min Academic %:</span>
+                  <span class="detail-value">${scholarship.min_academic_percentage}%</span>
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
+          
+          <div class="deadline">
+            Application Deadline: ${new Date(scholarship.application_deadline).toLocaleDateString()}
+          </div>
+          
+          ${scholarship.type === 'general' && scholarship.applyLink ? `
+            <button class="apply-btn" onclick="window.open('${scholarship.applyLink}', '_blank')" style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 15px;">
+              Apply Now
+            </button>
+          ` : scholarship.type === 'sponsor' ? `
+            <button class="apply-btn" onclick="showApplicationModal('${scholarship.id}', '${scholarship.title.replace(/'/g, "\\'")}', '${scholarship.sponsor_name.replace(/'/g, "\\'")}')" style="background: #0b3d91; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 15px;">
+              Apply for Scholarship
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function showNoScholarships() {
+      document.getElementById('scholarshipsContainer').innerHTML = '';
+      document.getElementById('noScholarshipsMessage').style.display = 'block';
+    }
+
+    function goBack() {
+      window.location.href = 'student_dashboard.html';
+    }
+
+    // Application modal functions
+    let currentScholarshipId = null;
+
+    function showApplicationModal(scholarshipId, scholarshipTitle, sponsorName) {
+      currentScholarshipId = scholarshipId;
+      document.getElementById('modalTitle').textContent = `Apply for ${scholarshipTitle}`;
+      document.getElementById('modalDescription').textContent = `Write a message to ${sponsorName} explaining why you should be considered for this scholarship:`;
+      document.getElementById('applicationMessage').value = '';
+      document.getElementById('applicationModal').style.display = 'block';
+    }
+
+    function closeApplicationModal() {
+      document.getElementById('applicationModal').style.display = 'none';
+      currentScholarshipId = null;
+    }
+
+    async function submitApplication() {
+      const message = document.getElementById('applicationMessage').value.trim();
+      
+      if (!message) {
+        alert('Please write a message explaining why you should be considered for this scholarship.');
+        return;
+      }
+
+      if (!currentScholarshipId) {
+        alert('Error: Scholarship ID not found.');
+        return;
+      }
+
+      try {
+        // Get student profile data (optional - allow application even without complete profile)
+        let studentData = {};
+        try {
+          const studentResponse = await fetch('http://localhost:5001/api/student/profile');
+          const studentResult = await studentResponse.json();
+          
+          if (studentResult.success && studentResult.profile) {
+            studentData = studentResult.profile;
+          }
+        } catch (error) {
+          console.log('No student profile found, proceeding with application');
+        }
+
+        const applicationData = {
+          scholarship_id: currentScholarshipId,
+          student_data: studentData,
+          application_message: message
+        };
+
+        console.log('Submitting application with data:', applicationData);
+
+        const response = await fetch('http://localhost:5001/api/scholarship-applications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(applicationData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Application submitted successfully! The sponsor will review your application.');
+          closeApplicationModal();
+        } else {
+          alert('Error submitting application: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error submitting application. Please make sure the Flask server is running on port 5001.');
+      }
+    }
+
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('applicationModal');
+      if (event.target === modal) {
+        closeApplicationModal();
+      }
+    }
+  </script>
+</body>
+</html>

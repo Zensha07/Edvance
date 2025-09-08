@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Approaches - Edvance</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header {
+      background: linear-gradient(90deg, #0b3d91 0%, #1838a1 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease;
+    }
+    .back-btn:hover {
+      background: #5a6268;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .filter-section {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .filter-section h3 {
+      margin-top: 0;
+      color: #0b3d91;
+      font-size: 1.3rem;
+    }
+    .filter-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: end;
+    }
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #253858;
+    }
+    .filter-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ccd7e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    .filter-group select:focus {
+      border-color: #0b3d91;
+      outline: none;
+      box-shadow: 0 0 8px rgba(11, 61, 145, 0.25);
+    }
+    .filter-btn {
+      background: #0b3d91;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      height: fit-content;
+    }
+    .filter-btn:hover {
+      background: #1838a1;
+    }
+    .applications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 25px;
+    }
+    .application-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .application-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    .application-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e9ecef;
+    }
+    .scholarship-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #0b3d91;
+      margin: 0;
+      flex: 1;
+    }
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-accepted {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .student-info {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .info-item:last-child {
+      margin-bottom: 0;
+    }
+    .info-label {
+      font-weight: 600;
+      color: #0b3d91;
+    }
+    .info-value {
+      color: #333;
+    }
+    .application-message {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border-left: 4px solid #0b3d91;
+    }
+    .message-label {
+      font-weight: 600;
+      color: #0b3d91;
+      margin-bottom: 8px;
+    }
+    .message-text {
+      color: #333;
+      line-height: 1.6;
+    }
+    .application-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .action-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .action-btn.accept {
+      background: #28a745;
+      color: white;
+    }
+    .action-btn.accept:hover {
+      background: #218838;
+    }
+    .action-btn.reject {
+      background: #dc3545;
+      color: white;
+    }
+    .action-btn.reject:hover {
+      background: #c82333;
+    }
+    .action-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+    .no-applications {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    .no-applications h3 {
+      color: #0b3d91;
+      margin-bottom: 10px;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    .application-date {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Student Applications</h1>
+      <p>Review and manage scholarship applications from students</p>
+    </div>
+    
+    <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+    
+    <div class="filter-section">
+      <h3>Filter Applications</h3>
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="">All Applications</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="scholarshipFilter">Scholarship</label>
+          <select id="scholarshipFilter">
+            <option value="">All Scholarships</option>
+          </select>
+        </div>
+        <button class="filter-btn" onclick="filterApplications()">Filter</button>
+      </div>
+    </div>
+    
+    <div id="loadingMessage" class="loading" style="display: none;">
+      <h3>Loading applications...</h3>
+    </div>
+    
+    <div id="noApplicationsMessage" class="no-applications" style="display: none;">
+      <h3>No applications found</h3>
+      <p>No student applications match your current filters.</p>
+    </div>
+    
+    <div id="applicationsContainer" class="applications-grid">
+      <!-- Applications will be loaded here -->
+    </div>
+  </div>
+
+  <script>
+    let allApplications = [];
+    let filteredApplications = [];
+
+    // Load applications on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadApplications();
+    });
+
+    async function loadApplications() {
+      try {
+        document.getElementById('loadingMessage').style.display = 'block';
+        document.getElementById('noApplicationsMessage').style.display = 'none';
+        
+        const response = await fetch('http://localhost:5001/api/scholarship-applications');
+        const result = await response.json();
+        
+        if (result.success) {
+          allApplications = result.applications;
+          filteredApplications = allApplications;
+          populateScholarshipFilter();
+          displayApplications(filteredApplications);
+        } else {
+          console.error('Error loading applications:', result.message);
+          showNoApplications();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showNoApplications();
+      } finally {
+        document.getElementById('loadingMessage').style.display = 'none';
+      }
+    }
+
+    function populateScholarshipFilter() {
+      const scholarshipFilter = document.getElementById('scholarshipFilter');
+      const uniqueScholarships = [...new Set(allApplications.map(app => app.scholarship_title))];
+      
+      // Clear existing options except the first one
+      scholarshipFilter.innerHTML = '<option value="">All Scholarships</option>';
+      
+      uniqueScholarships.forEach(title => {
+        const option = document.createElement('option');
+        option.value = title;
+        option.textContent = title;
+        scholarshipFilter.appendChild(option);
+      });
+    }
+
+    function filterApplications() {
+      const statusFilter = document.getElementById('statusFilter').value;
+      const scholarshipFilter = document.getElementById('scholarshipFilter').value;
+      
+      filteredApplications = allApplications.filter(application => {
+        const statusMatch = !statusFilter || application.status === statusFilter;
+        const scholarshipMatch = !scholarshipFilter || application.scholarship_title === scholarshipFilter;
+        
+        return statusMatch && scholarshipMatch;
+      });
+      
+      displayApplications(filteredApplications);
+    }
+
+    function displayApplications(applications) {
+      const container = document.getElementById('applicationsContainer');
+      
+      if (applications.length === 0) {
+        showNoApplications();
+        return;
+      }
+
+      container.innerHTML = applications.map(application => {
+        const studentData = application.student_data;
+        const personalData = studentData.personal_data || {};
+        const academicData = studentData.academic_data || {};
+        const residentialData = studentData.residential_data || {};
+        
+        return `
+          <div class="application-card">
+            <div class="application-header">
+              <h3 class="scholarship-title">${application.scholarship_title}</h3>
+              <span class="status-badge status-${application.status}">${application.status}</span>
+            </div>
+            
+            <div class="student-info">
+              ${Object.keys(studentData).length > 0 ? `
+                <div class="info-item">
+                  <span class="info-label">Student Name:</span>
+                  <span class="info-value">${personalData.name || 'Not provided'}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Email:</span>
+                  <span class="info-value">${personalData.email || 'Not provided'}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Phone:</span>
+                  <span class="info-value">${personalData.phone || 'Not provided'}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Gender:</span>
+                  <span class="info-value">${personalData.gender || 'Not provided'}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Date of Birth:</span>
+                  <span class="info-value">${personalData.dateOfBirth || 'Not provided'}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Current Standard:</span>
+                  <span class="info-value">${academicData.currentStandard || 'Not provided'}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Academic Percentage:</span>
+                  <span class="info-value">${academicData.academicPercentage || 'Not provided'}%</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Family Income:</span>
+                  <span class="info-value">₹${academicData.familyIncome || 'Not provided'}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Location Type:</span>
+                  <span class="info-value">${residentialData.locationType || 'Not provided'}</span>
+                </div>
+              ` : `
+                <div class="info-item">
+                  <span class="info-label">Profile Status:</span>
+                  <span class="info-value" style="color: #dc3545; font-weight: 600;">Student profile not completed</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Note:</span>
+                  <span class="info-value">Student applied without completing their profile. Please contact them directly for more information.</span>
+                </div>
+              `}
+            </div>
+            
+            <div class="application-message">
+              <div class="message-label">Application Message:</div>
+              <div class="message-text">${application.application_message || 'No message provided'}</div>
+            </div>
+            
+            <div class="application-actions">
+              ${application.status === 'pending' ? `
+                <button class="action-btn accept" onclick="updateApplicationStatus(${application.id}, 'accepted')">
+                  Accept
+                </button>
+                <button class="action-btn reject" onclick="updateApplicationStatus(${application.id}, 'rejected')">
+                  Reject
+                </button>
+              ` : `
+                <button class="action-btn" disabled>
+                  ${application.status === 'accepted' ? 'Accepted' : 'Rejected'}
+                </button>
+              `}
+            </div>
+            
+            <div class="application-date">
+              Applied on: ${new Date(application.applied_at).toLocaleDateString()}
+              ${application.reviewed_at ? ` | Reviewed on: ${new Date(application.reviewed_at).toLocaleDateString()}` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function updateApplicationStatus(applicationId, status) {
+      if (!confirm(`Are you sure you want to ${status} this application?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5001/api/scholarship-applications/${applicationId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: status })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert(`Application ${status} successfully!`);
+          loadApplications(); // Reload applications to show updated status
+        } else {
+          alert('Error updating application: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error updating application. Please make sure the Flask server is running on port 5001.');
+      }
+    }
+
+    function showNoApplications() {
+      document.getElementById('applicationsContainer').innerHTML = '';
+      document.getElementById('noApplicationsMessage').style.display = 'block';
+    }
+
+    function goBack() {
+      window.location.href = 'sponsor_dashboard.html';
+    }
+  </script>
+</body>
+</html>
