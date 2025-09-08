@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sponsor Dashboard - Edvance</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #0b3d91 0%, #1838a1 100%);
+      color: white;
+      padding: 40px 36px 60px 36px;
+      font-size: 2.8rem;
+      font-weight: 700;
+      user-select: none;
+      box-shadow: 0 4px 8px rgba(11, 61, 145, 0.6);
+      letter-spacing: 1.4px;
+      display: flex;
+      align-items: center;
+    }
+    /* Dropdown Container */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      margin-right: auto; /* push dashboard text right */
+    }
+    .dropbtn {
+      font-size: 1.6rem;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 10px 18px;
+      border-radius: 4px;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dropbtn:focus {
+      outline: none;
+      background-color: rgba(255,255,255,0.15);
+    }
+    /* caret icon */
+    .caret {
+      border-top: 6px solid white;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      width: 0;
+      height: 0;
+      display: inline-block;
+      margin-left: 4px;
+    }
+    /* Dropdown content */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 180px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      right: 0;
+      top: 100%;
+      margin-top: 6px;
+    }
+    .dropdown-content a {
+      color: #0b3d91;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      border-bottom: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .dropdown-content a:last-child {
+      border-bottom: none;
+    }
+    .dropdown-content a:hover {
+      background-color: #0b3d91;
+      color: white;
+    }
+    .dropdown.show .dropdown-content {
+      display: block;
+    }
+
+    main {
+      display: flex;
+      gap: 36px;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 30px 80px 30px;
+      flex-wrap: wrap;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .panel {
+      background: white;
+      width: 280px;
+      height: 300px;
+      border-radius: 20px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
+      user-select: none;
+      text-align: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel:hover {
+      transform: scale(1.12);
+      box-shadow: 0 22px 60px rgba(0,0,0,0.25);
+      z-index: 10;
+    }
+    .panel-logo {
+      margin-bottom: 28px;
+      width: 120px;
+      height: 100px;
+      border-radius: 50%;
+      background: #0b3d91;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(11, 61, 145, 0.5);
+      overflow: hidden;
+    }
+    .panel-logo img, .panel-logo svg {
+      width: auto;
+      height: 56px;
+      filter: drop-shadow(0 0 4px rgba(0,0,0,0.15));
+    }
+    .panel-label {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0b3d91;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="dropdown" id="dashboardDropdown">
+      <button class="dropbtn" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownMenu">
+        &#9776; Menu <span class="caret"></span>
+      </button>
+      <div class="dropdown-content" id="dropdownMenu" role="menu">
+        <a href="#" id="ddProfile" role="menuitem" tabindex="0">Profile</a>
+        <a href="#" id="ddAddSponsorship" role="menuitem" tabindex="0">Add Sponsorship</a>
+        <a href="#" id="ddStudentApproaches" role="menuitem" tabindex="0">Student Approaches</a>
+        <a href="#" id="ddLogout" role="menuitem" tabindex="0">Logout</a>
+      </div>
+    </div>
+    <div style="margin-left: 20px; font-size: 2.8rem; font-weight: 700; color: white; user-select: none;">
+      Dashboard
+    </div>
+  </header>
+
+  <main>
+    <!-- Profile Panel -->
+    <div class="panel" id="profilePanel" title="View and edit your profile" tabindex="0">
+      <div class="panel-logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/2922/2922506.png" alt="Male profile" />
+      </div>
+      <div class="panel-label">Profile</div>
+    </div>
+
+    <!-- Add Sponsorship Panel -->
+    <div class="panel" id="addSponsorshipPanel" title="Add sponsorship offers" tabindex="0">
+      <div class="panel-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="gold" stroke="darkgoldenrod" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" width="46" height="46">
+          <circle cx="32" cy="32" r="28" />
+          <circle cx="32" cy="32" r="20" fill="gold" />
+          <line x1="32" y1="12" x2="32" y2="52" />
+          <line x1="22" y1="32" x2="42" y2="32" />
+          <line x1="25" y1="22" x2="39" y2="42" />
+          <line x1="25" y1="42" x2="39" y2="22" />
+        </svg>
+      </div>
+      <div class="panel-label">Add Sponsorship</div>
+    </div>
+
+    <!-- Student Approaches Panel -->
+    <div class="panel" id="studentApproachesPanel" title="View students eligible for sponsorship" tabindex="0">
+      <div class="panel-logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/2922/2922560.png" alt="Female student" />
+      </div>
+      <div class="panel-label">Student Approaches</div>
+    </div>
+  </main>
+
+  <script>
+    let profileCompleted = false; // Toggle for example profile state
+
+    // Dropdown Menu toggle
+    const dropdown = document.getElementById('dashboardDropdown');
+    const dropbtn = dropdown.querySelector('.dropbtn');
+    const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+    dropbtn.addEventListener('click', () => {
+      const isExpanded = dropbtn.getAttribute('aria-expanded') === 'true';
+      dropbtn.setAttribute('aria-expanded', !isExpanded);
+      dropdown.classList.toggle('show');
+    });
+
+    // Close dropdown if click outside
+    window.addEventListener('click', function(e) {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('show');
+        dropbtn.setAttribute('aria-expanded', false);
+      }
+    });
+
+    // Navigation functions
+    function goToProfile() {
+      window.location.href = 'sponsor_profile.html';
+    }
+    function goToAddSponsorship() {
+      if (!profileCompleted) {
+        alert('Please complete your profile before adding sponsorships.');
+        goToProfile();
+      } else {
+        window.location.href = 'add_sponsorship.html';
+      }
+    }
+    function goToStudentApproaches() {
+      window.location.href = 'student_approaches.html';
+    }
+    function logout() {
+      alert('Logging out...');
+      // Clear session or tokens here if any
+      window.location.href = 'login_sponsor.html';
+    }
+
+    // Dropdown item event listeners
+    document.getElementById('ddProfile').addEventListener('click', goToProfile);
+    document.getElementById('ddAddSponsorship').addEventListener('click', goToAddSponsorship);
+    document.getElementById('ddStudentApproaches').addEventListener('click', goToStudentApproaches);
+    document.getElementById('ddLogout').addEventListener('click', logout);
+
+    // Panel click event listeners (same as dropdown)
+    document.getElementById('profilePanel').addEventListener('click', goToProfile);
+    document.getElementById('addSponsorshipPanel').addEventListener('click', goToAddSponsorship);
+    document.getElementById('studentApproachesPanel').addEventListener('click', goToStudentApproaches);
+
+    // Keyboard accessibility for panels
+    const panels = document.querySelectorAll('.panel');
+    panels.forEach(panel => {
+      panel.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          panel.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
