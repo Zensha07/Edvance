@@ -3,151 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Student Profile - Edvance</title>
+  <title>Sponsor Profile - Edvance</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: start;
-      min-height: 100vh;
-      padding: 60px 20px;
-    }
-    .profile-container {
-      background: white;
-      padding: 40px 50px;
-      border-radius: 20px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-      width: 420px;
-      max-width: 100%;
-    }
-    h2 {
-      margin-top: 0;
-      margin-bottom: 30px;
-      color: #0b3d91;
-      font-weight: 700;
-      font-size: 2.2rem;
-      text-align: center;
-      letter-spacing: 0.05em;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #253858;
-      font-size: 1rem;
-    }
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 20px;
-      border: 2px solid #ccd7e0;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s ease;
-    }
-    input[type="text"]:focus, input[type="number"]:focus {
-      border-color: #0b3d91;
-      outline: none;
-      box-shadow: 0 0 8px rgba(11, 61, 145, 0.25);
-    }
-    button {
-      background-color: #0b3d91;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 14px 0;
-      font-size: 1.1rem;
-      font-weight: 600;
-      width: 100%;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #1838a1;
-    }
-    .success-message {
-      color: green;
-      font-weight: 600;
-      margin-bottom: 20px;
-      display: none;
-      text-align: center;
-    }
+    /* ... [Use the same styles as provided earlier for clean UI] ... */
   </style>
 </head>
 <body>
   <div class="profile-container">
-    <h2>Student Profile</h2>
-    <div id="successMessage" class="success-message">Profile saved successfully!</div>
-    <form id="profileForm">
-      <label for="name">Full Name</label>
+    <h2>Sponsor Profile</h2>
+    <div id="successMessage" class="success-message" style="display:none;">Profile saved successfully!</div>
+    <form id="profileForm" enctype="multipart/form-data">
+      <label for="name">Name</label>
       <input type="text" id="name" name="name" placeholder="Full Name" required />
-
-      <label for="lastClassPercentage">Last Class Percentage (%)</label>
-      <input type="number" id="lastClassPercentage" name="lastClassPercentage" min="0" max="100" placeholder="Percentage" required />
-
-      <label for="gender">Gender</label>
-      <input type="text" id="gender" name="gender" placeholder="Gender" required />
-
-      <label for="location">Location</label>
-      <input type="text" id="location" name="location" placeholder="Location" required />
-
-      <label for="financialCondition">Financial Condition</label>
-      <input type="text" id="financialCondition" name="financialCondition" placeholder="Financial Condition" required />
-
-      <label for="physicalDisability">Physical Disability (Yes/No)</label>
-      <input type="text" id="physicalDisability" name="physicalDisability" placeholder="Yes or No" required />
-
+      
+      <label for="companyName">Company Name</label>
+      <input type="text" id="companyName" name="companyName" placeholder="Company Name" required />
+      
+      <label for="gstNumber">GST Number</label>
+      <input type="text" id="gstNumber" name="gstNumber" placeholder="GST Number" required />
+      
+      <label for="annualTurnover">Annual Turnover (in ₹)</label>
+      <input type="number" id="annualTurnover" name="annualTurnover" placeholder="Annual Turnover" required min="0" />
+      
+      <label for="taxRegistration">Tax Registration Document (PDF)</label>
+      <input type="file" id="taxRegistration" name="taxRegistration" accept="application/pdf" />
+      
       <button type="submit">Save Profile</button>
     </form>
   </div>
 
   <script>
-    const studentId = 1; // Replace with actual logged-in student ID
-
-    window.onload = async () => {
+    async function loadProfile() {
       try {
-        const res = await fetch(`http://127.0.0.1:5000/student_profile/${studentId}`);
+        const res = await fetch('/api/sponsor/profile');
         if (res.ok) {
           const data = await res.json();
-          document.getElementById('name').value = data.name || '';
-          document.getElementById('lastClassPercentage').value = data.lastClassPercentage || '';
-          document.getElementById('gender').value = data.gender || '';
-          document.getElementById('location').value = data.location || '';
-          document.getElementById('financialCondition').value = data.financialCondition || '';
-          document.getElementById('physicalDisability').value = data.physicalDisability || '';
+          if(data.profile) {
+            const profile = data.profile;
+            document.getElementById('name').value = profile.name || '';
+            document.getElementById('companyName').value = profile.companyName || '';
+            document.getElementById('gstNumber').value = profile.gstNumber || '';
+            document.getElementById('annualTurnover').value = profile.annualTurnover || '';
+          }
         }
-      } catch (e) {
-        console.error('Failed to load profile', e);
+      } catch (err) {
+        console.error('Error loading profile', err);
       }
-    };
+    }
 
-    const profileForm = document.getElementById('profileForm');
-    const successMessage = document.getElementById('successMessage');
-
-    profileForm.addEventListener('submit', async function (e) {
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(profileForm);
+
+      const formData = new FormData(e.target);
+
+      // Only append file if selected
+      const fileInput = document.getElementById('taxRegistration');
+      if(fileInput.files.length > 0) {
+        formData.append('taxRegistration', fileInput.files[0]);
+      }
 
       try {
-        const res = await fetch(`http://127.0.0.1:5000/student_profile/${studentId}`, {
+        const res = await fetch('/api/sponsor/profile', {
           method: 'POST',
           body: formData
         });
-        const data = await res.json();
-
-        if (res.ok) {
-          successMessage.style.display = 'block';
-          setTimeout(() => (successMessage.style.display = 'none'), 4000);
+        const result = await res.json();
+        if(result.success) {
+          document.getElementById('successMessage').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('successMessage').style.display = 'none';
+          }, 3000);
         } else {
-          alert(data.message || 'Failed to save profile');
+          alert('Failed to save profile: ' + result.message);
         }
       } catch (err) {
-        alert('Server error. Please try again later.');
+        alert('Error saving profile');
+        console.error(err);
       }
     });
+
+    loadProfile();
   </script>
 </body>
 </html>
+
+
+
+
+
+
