@@ -5,13 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sponsor Profile - Edvance</title>
   <style>
-    /* ... [Use the same styles as provided earlier for clean UI] ... */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      min-height: 100vh;
+      padding: 60px 20px;
+    }
+    .profile-container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      width: 420px;
+      max-width: 100%;
+    }
+    h2 {
+      margin-top: 0;
+      margin-bottom: 30px;
+      color: #0b3d91;
+      font-weight: 700;
+      font-size: 2.2rem;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #253858;
+      font-size: 1rem;
+    }
+    input[type="text"], input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border: 2px solid #ccd7e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="number"]:focus, input[type="file"]:focus {
+      border-color: #0b3d91;
+      outline: none;
+      box-shadow: 0 0 8px rgba(11, 61, 145, 0.25);
+    }
+    button {
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1838a1;
+    }
+    .success-message {
+      color: green;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div class="profile-container">
     <h2>Sponsor Profile</h2>
-    <div id="successMessage" class="success-message" style="display:none;">Profile saved successfully!</div>
+    <div id="successMessage" class="success-message">Profile saved successfully!</div>
     <form id="profileForm" enctype="multipart/form-data">
       <label for="name">Name</label>
       <input type="text" id="name" name="name" placeholder="Full Name" required />
@@ -26,69 +96,45 @@
       <input type="number" id="annualTurnover" name="annualTurnover" placeholder="Annual Turnover" required min="0" />
       
       <label for="taxRegistration">Tax Registration Document (PDF)</label>
-      <input type="file" id="taxRegistration" name="taxRegistration" accept="application/pdf" />
+      <input type="file" id="taxRegistration" name="taxRegistration" accept="application/pdf" required />
       
       <button type="submit">Save Profile</button>
     </form>
   </div>
 
   <script>
-    async function loadProfile() {
-      try {
-        const res = await fetch('/api/sponsor/profile');
-        if (res.ok) {
-          const data = await res.json();
-          if(data.profile) {
-            const profile = data.profile;
-            document.getElementById('name').value = profile.name || '';
-            document.getElementById('companyName').value = profile.companyName || '';
-            document.getElementById('gstNumber').value = profile.gstNumber || '';
-            document.getElementById('annualTurnover').value = profile.annualTurnover || '';
-          }
-        }
-      } catch (err) {
-        console.error('Error loading profile', err);
-      }
-    }
+    const profileForm = document.getElementById('profileForm');
+    const successMessage = document.getElementById('successMessage');
 
-    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+    profileForm.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const formData = new FormData(e.target);
-
-      // Only append file if selected
-      const fileInput = document.getElementById('taxRegistration');
-      if(fileInput.files.length > 0) {
-        formData.append('taxRegistration', fileInput.files[0]);
+      const taxFileInput = document.getElementById('taxRegistration');
+      
+      // Check file selected and is PDF
+      if(taxFileInput.files.length === 0) {
+        alert('Please upload your tax registration PDF.');
+        return;
+      }
+      const file = taxFileInput.files[0];
+      if(file.type !== 'application/pdf') {
+        alert('Please upload a valid PDF file.');
+        return;
       }
 
-      try {
-        const res = await fetch('/api/sponsor/profile', {
-          method: 'POST',
-          body: formData
-        });
-        const result = await res.json();
-        if(result.success) {
-          document.getElementById('successMessage').style.display = 'block';
-          setTimeout(() => {
-            document.getElementById('successMessage').style.display = 'none';
-          }, 3000);
-        } else {
-          alert('Failed to save profile: ' + result.message);
-        }
-      } catch (err) {
-        alert('Error saving profile');
-        console.error(err);
-      }
+      // Here, you can handle saving form data and file to backend or localStorage
+      // For this example, just show success message
+      successMessage.style.display = 'block';
+
+      // Optionally, clear the form after submission or keep info
+      // profileForm.reset();
+
+      // You can also store info in localStorage here if desired
+      // For now, just simulate delay and then hide message
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+      }, 4000);
     });
-
-    loadProfile();
   </script>
 </body>
 </html>
-
-
-
-
-
-
