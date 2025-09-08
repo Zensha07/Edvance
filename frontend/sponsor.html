@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Sponsor Details - Edvance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #e8f0ff;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+  }
+  form {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
+  }
+  h2 {
+    margin-bottom: 25px;
+    color: #204080;
+  }
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+  }
+  input[type="text"],
+  select {
+    width: 100%;
+    padding: 10px 14px;
+    margin-top: 6px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  button {
+    margin-top: 28px;
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    background: #2979ff;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #1565c0;
+  }
+</style>
+</head>
+<body>
+
+<form id="sponsorForm" onsubmit="return handleSponsorSubmit(event)">
+  <h2>Sponsor Details</h2>
+
+  <label for="companyName">Company Name</label>
+  <input type="text" id="companyName" required />
+
+  <label for="gstNumber">GST Registration Number</label>
+  <input type="text" id="gstNumber" required />
+
+  <label for="studentPercentage">Type of Student - Minimum Percentage in Last Class</label>
+  <select id="studentPercentage" required>
+    <option value="">Select range</option>
+    <option value=">=90%">90% and above</option>
+    <option value=">=80%">80% and above</option>
+    <option value=">=70%">70% and above</option>
+    <option value=">=60%">60% and above</option>
+    <option value="<60%"><60%</option>
+  </select>
+
+  <label for="studentGender">Preferred Student Gender</label>
+  <select id="studentGender" required>
+    <option value="">Select gender</option>
+    <option value="any">Any</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="other">Other</option>
+  </select>
+
+  <label for="location">Preferred Location</label>
+  <select id="location" required>
+    <option value="">Select location</option>
+    <option value="rural">Rural</option>
+    <option value="urban">Urban</option>
+    <option value="any">Any</option>
+  </select>
+
+  <label for="financialCondition">Financial Condition</label>
+  <select id="financialCondition" required>
+    <option value="">Select condition</option>
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+    <option value="any">Any</option>
+  </select>
+
+  <label for="physicalDisability">Physical Disability</label>
+  <select id="physicalDisability" required>
+    <option value="">Select option</option>
+    <option value="yes">Yes</option>
+    <option value="no">No</option>
+    <option value="any">Any</option>
+  </select>
+
+  <button type="submit">Submit Sponsor Details</button>
+</form>
+
+<script>
+  function handleSponsorSubmit(event) {
+    event.preventDefault();
+
+    const data = {
+      companyName: document.getElementById('companyName').value.trim(),
+      gstNumber: document.getElementById('gstNumber').value.trim(),
+      studentPercentage: document.getElementById('studentPercentage').value,
+      studentGender: document.getElementById('studentGender').value,
+      location: document.getElementById('location').value,
+      financialCondition: document.getElementById('financialCondition').value,
+      physicalDisability: document.getElementById('physicalDisability').value,
+    };
+
+    // For demonstration: log collected sponsor info
+    console.log('Sponsor data:', data);
+
+    // TODO: send 'data' to backend API or database here
+
+    alert('Sponsor details submitted successfully!');
+    // Optionally reset form or redirect as needed
+    event.target.reset();
+  }
+</script>
+
+</body>
+</html>
