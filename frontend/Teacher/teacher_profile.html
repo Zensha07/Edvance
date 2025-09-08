@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teacher Profile Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      /* Light blue gradient background */
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 40px;
+      color: #222;
+    }
+    .container {
+      max-width: 480px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+    h1 {
+      color: #0b3d91;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 2px solid #ccd7e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="date"]:focus {
+      outline: none;
+      border-color: #0b3d91;
+      box-shadow: 0 0 7px rgba(11, 61, 145, 0.25);
+    }
+    button {
+      margin-top: 24px;
+      width: 100%;
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1838a1;
+    }
+    .output {
+      margin-top: 30px;
+      padding: 20px;
+      background: #eaf1fd;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Teacher Profile Form</h1>
+    <form id="teacherForm">
+      <label for="name">Name</label>
+      <input type="text" id="name" required placeholder="Enter your full name" />
+
+      <label for="qualification">Qualification</label>
+      <input type="text" id="qualification" required placeholder="Your qualification" />
+
+      <label for="teachingWhere">Currently Teaching Where</label>
+      <input type="text" id="teachingWhere" required placeholder="Institution name" />
+
+      <label for="sinceWhen">Since When</label>
+      <input type="date" id="sinceWhen" required />
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div id="output" class="output" style="display:none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('teacherForm');
+    const outputDiv = document.getElementById('output');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const qualification = document.getElementById('qualification').value.trim();
+      const teachingWhere = document.getElementById('teachingWhere').value.trim();
+      const sinceWhen = document.getElementById('sinceWhen').value;
+
+      if (!name || !qualification || !teachingWhere || !sinceWhen) {
+        alert('Please fill all fields.');
+        return;
+      }
+
+      const formattedDate = new Date(sinceWhen).toLocaleDateString();
+
+      outputDiv.style.display = 'block';
+      outputDiv.innerHTML = `
+        <h2>Entered Teacher Profile:</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Qualification:</strong> ${qualification}</p>
+        <p><strong>Currently Teaching Where:</strong> ${teachingWhere}</p>
+        <p><strong>Since When:</strong> ${formattedDate}</p>
+      `;
+
+      form.reset();
+    });
+  </script>
+</body>
+</html>

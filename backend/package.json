@@ -5,14 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^5.1.0",
-    "multer": "^2.0.2",
-    "sqlite3": "^5.1.7"
-  }
+  "license": "ISC"
 }
