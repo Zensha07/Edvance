@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Upload Lecture Notes - Teacher</title>
+  <title>Upload Notes</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -67,10 +67,10 @@
 <body>
   <div class="container">
     <h1>Upload Lecture Notes</h1>
-    <form id="uploadNotesForm">
-      <label for="standard">Select Standard</label>
-      <select id="standard" required>
-        <option value="" disabled selected>Choose standard</option>
+    <form id="uploadNotesForm" enctype="multipart/form-data">
+      <label for="standard">Select Standard or College Year</label>
+      <select id="standard" name="standard" required>
+        <option value="" disabled selected>Choose standard or year</option>
         <option>Class 6</option>
         <option>Class 7</option>
         <option>Class 8</option>
@@ -78,10 +78,14 @@
         <option>Class 10</option>
         <option>Class 11</option>
         <option>Class 12</option>
+        <option>1st Year</option>
+        <option>2nd Year</option>
+        <option>3rd Year</option>
+        <option>4th Year</option>
       </select>
       
       <label for="subject">Select Subject</label>
-      <select id="subject" required>
+      <select id="subject" name="subject" required>
         <option value="" disabled selected>Choose subject</option>
         <option>Mathematics</option>
         <option>Physics</option>
@@ -93,10 +97,10 @@
       </select>
       
       <label for="topic">Topic</label>
-      <input type="text" id="topic" placeholder="Enter topic" required />
+      <input type="text" id="topic" name="topic" placeholder="Enter topic" required />
       
       <label for="notesPdf">Upload Lecture Notes (PDF)</label>
-      <input type="file" id="notesPdf" accept="application/pdf" required />
+      <input type="file" id="notesPdf" name="notesPdf" accept="application/pdf" required />
       
       <button type="submit">Upload</button>
     </form>
@@ -111,22 +115,27 @@
       const topic = document.getElementById('topic').value.trim();
       const pdfInput = document.getElementById('notesPdf');
       
+      if (!standard || !subject || !topic) {
+        alert('Please fill all fields before submitting.');
+        return;
+      }
+
       if (!pdfInput.files.length) {
         alert('Please select a PDF file to upload.');
         return;
       }
-
+      
       const file = pdfInput.files[0];
-      if (file.type !== 'application/pdf') {
+      if (!file.name.toLowerCase().endsWith('.pdf')) {
         alert('Only PDF files are allowed!');
         return;
       }
 
-      // Normally here you would send form data and file to backend
-      alert(`Standard: ${standard}\nSubject: ${subject}\nTopic: ${topic}\nFile: ${file.name}\n\n(Submission simulated)`);
+      // Simulated upload success
+      alert(`✅ Upload Successful!\n\nStandard/Year: ${standard}\nSubject: ${subject}\nTopic: ${topic}\nFile: ${file.name}`);
 
-      // Clear form after submission
-      e.target.reset();
+      // Reset form
+      this.reset();
     });
   </script>
 </body>

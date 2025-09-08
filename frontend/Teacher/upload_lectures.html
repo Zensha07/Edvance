@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload Lecture</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 40px;
+      color: #222;
+    }
+    .container {
+      max-width: 520px;
+      margin: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 25px 35px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+    h1 {
+      text-align: center;
+      color: #0b3d91;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-top: 18px;
+      color: #555;
+    }
+    select, input[type="text"], input[type="url"], input[type="file"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 2px solid #ccd7e0;
+      border-radius: 7px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    select:focus, input[type="text"]:focus, input[type="url"]:focus, input[type="file"]:focus {
+      outline: none;
+      border-color: #0b3d91;
+      box-shadow: 0 0 8px rgba(11,61,145,0.25);
+    }
+    .radio-group {
+      margin-top: 20px;
+      display: flex;
+      gap: 24px;
+      font-weight: 600;
+      color: #333;
+    }
+    button {
+      margin-top: 30px;
+      width: 100%;
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      padding: 14px 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1838a1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload Lecture</h1>
+    <form id="videoUploadForm">
+      <label for="standard">Standard / College Year</label>
+      <select id="standard" required>
+        <option value="" selected disabled>Choose standard/year</option>
+        <option>Class 6</option>
+        <option>Class 7</option>
+        <option>Class 8</option>
+        <option>Class 9</option>
+        <option>Class 10</option>
+        <option>Class 11</option>
+        <option>Class 12</option>
+        <option>1st Year</option>
+        <option>2nd Year</option>
+        <option>3rd Year</option>
+        <option>4th Year</option>
+      </select>
+
+      <label for="subject">Subject</label>
+      <select id="subject" required>
+        <option value="" selected disabled>Choose subject</option>
+        <option>Mathematics</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Biology</option>
+        <option>English</option>
+        <option>History</option>
+        <option>Geography</option>
+        <option>Computer Science</option>
+      </select>
+
+      <label for="topic">Topic</label>
+      <input type="text" id="topic" placeholder="Enter topic" required />
+
+      <div class="radio-group">
+        <label><input type="radio" name="inputType" value="file" checked /> Upload Video File</label>
+        <label><input type="radio" name="inputType" value="link" /> Provide Video Link</label>
+      </div>
+
+      <div id="videoFileInput">
+        <label for="videoFile">Upload Video File</label>
+        <input type="file" id="videoFile" accept="video/*" />
+      </div>
+
+      <div id="videoLinkInput" style="display:none;">
+        <label for="videoLink">Video Link (YouTube, Vimeo etc.)</label>
+        <input type="url" id="videoLink" placeholder="https://example.com/video" />
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const videoFileInput = document.getElementById('videoFileInput');
+    const videoLinkInput = document.getElementById('videoLinkInput');
+    const inputTypeRadios = document.getElementsByName('inputType');
+    const form = document.getElementById('videoUploadForm');
+
+    // Toggle input visibility based on radio selection
+    inputTypeRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.value === 'file' && radio.checked) {
+          videoFileInput.style.display = 'block';
+          videoLinkInput.style.display = 'none';
+        } else if (radio.value === 'link' && radio.checked) {
+          videoFileInput.style.display = 'none';
+          videoLinkInput.style.display = 'block';
+        }
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const standard = document.getElementById('standard').value;
+      const subject = document.getElementById('subject').value;
+      const topic = document.getElementById('topic').value.trim();
+
+      // Validate standard, subject, topic
+      if (!standard || !subject || !topic) {
+        alert('Please fill all required fields.');
+        return;
+      }
+
+      // Check input type
+      let selectedInput = document.querySelector('input[name="inputType"]:checked').value;
+
+      if (selectedInput === 'file') {
+        const videoFile = document.getElementById('videoFile').files[0];
+        if (!videoFile) {
+          alert('Please upload a video file.');
+          return;
+        }
+        if (!videoFile.type.startsWith('video/')) {
+          alert('Please upload a valid video file.');
+          return;
+        }
+        alert(`Standard: ${standard}\nSubject: ${subject}\nTopic: ${topic}\nVideo File: ${videoFile.name}\n\n(Form submission simulated)`);
+      } else {
+        const videoLink = document.getElementById('videoLink').value.trim();
+        if (!videoLink) {
+          alert('Please provide a video link.');
+          return;
+        }
+        alert(`Standard: ${standard}\nSubject: ${subject}\nTopic: ${topic}\nVideo Link: ${videoLink}\n\n(Form submission simulated)`);
+      }
+
+      form.reset();
+      videoLinkInput.style.display = 'none';
+      videoFileInput.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
