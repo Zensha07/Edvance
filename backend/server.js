@@ -7,7 +7,7 @@ const fs = require('fs');
 const app = express();
 const PORT = 3000;
 
-// Create uploads directory if it doesn't exist
+// Create uploads directory if it doesn't exists
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
@@ -84,3 +84,4 @@ app.post('/api/sponsor/profile', upload.single('taxRegistration'), (req, res) =>
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
