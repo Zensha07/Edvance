@@ -150,3 +150,24 @@ if __name__ == '__main__':
     init_db()
     print("Sponsor details table created or already exists.")
     app.run(debug=True)
+import sqlite3
+
+def init_sponsor_db():
+    conn = sqlite3.connect('backend/sponsor_database.db')  # Path to your database file
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS sponsors (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            company_name TEXT NOT NULL,
+            gst_number TEXT NOT NULL,
+            annual_turnover REAL NOT NULL,
+            tax_registration_path TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+    print("Sponsor database initialized and table created.")
+
+if __name__ == '__main__':
+    init_sponsor_db()
