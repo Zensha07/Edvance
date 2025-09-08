@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sponsor Login - Edvance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #a8dadc, #457b9d);
+      display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;
+    }
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      width: 320px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 30px;
+      color: #007bff;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .signup-text {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .signup-text a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .signup-text a:hover {
+      text-decoration: underline;
+    }
+    .error-message {
+      color: red;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Sponsor Login</h2>
+    <div id="errorMessage" class="error-message"></div>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email Address" required />
+      <input type="password" id="password" placeholder="Enter your password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div class="signup-text">
+      Don't have an account? <a href="signup_sponsor.html">Sign up here</a>
+    </div>
+  </div>
+
+  <script>
+    function getUsers() {
+      const users = localStorage.getItem('registeredSponsors');
+      return users ? JSON.parse(users) : [];
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = e.target.email.value.trim();
+      const password = e.target.password.value;
+      const errorMessage = document.getElementById('errorMessage');
+
+      const users = getUsers();
+      const user = users.find(u => u.email === email);
+
+      if(!user) {
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = "Email not found. Please sign up first.";
+        return;
+      }
+
+      if(user.password !== password) {
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = "Incorrect password. Please try again.";
+        return;
+      }
+
+      errorMessage.style.display = 'none';
+      // Redirect to sponsor dashboard after successful login
+      window.location.href = 'sponsor_dashboard.html';
+    });
+  </script>
+</body>
+</html>
