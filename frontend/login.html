@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edvance - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e8f0ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 320px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 24px;
+      color: #204080;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 14px;
+      margin: 10px 0 20px;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2979ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1565c0;
+    }
+    .signin-link {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #555;
+      cursor: pointer;
+    }
+    .signin-link:hover {
+      text-decoration: underline;
+    }
+    .error-msg {
+      color: red;
+      font-size: 14px;
+      margin: 8px 0;
+      height: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Login</h2>
+    <form id="loginForm" onsubmit="return handleLogin(event)">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <div class="error-msg" id="errorMsg"></div>
+      <button type="submit">Login</button>
+    </form>
+    <div class="signin-link" onclick="redirectToSignIn()">Don't have an account? Sign in</div>
+  </div>
+  <script>
+    function redirectToSignIn() {
+      window.location.href = 'signin.html';
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = '';
+
+      // Retrieve stored users
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+
+      // Check if user exists with matching password
+      const user = users.find(u => u.email === email);
+
+      if (!user) {
+        errorMsg.textContent = 'User not found.';
+        return false;
+      }
+      if (user.password !== password) {
+        errorMsg.textContent = 'Incorrect password.';
+        return false;
+      }
+
+      alert('Login successful for ' + email);
+      // Redirect to dashboard or homepage here
+      return true;
+    }
+  </script>
+</body>
+</html>
