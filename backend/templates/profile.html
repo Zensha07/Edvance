@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teacher Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 40px;
+      color: #222;
+    }
+    .container {
+      max-width: 480px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+    h1 {
+      color: #0b3d91;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+    }
+    strong {
+      color: #0b3d91;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Teacher Profile</h1>
+    <p><strong>Name:</strong> {{ name }}</p>
+    <p><strong>Qualification:</strong> {{ qualification }}</p>
+    <p><strong>Currently Teaching Where:</strong> {{ teaching_where }}</p>
+    <p><strong>Since When:</strong> {{ since_when }}</p>
+  </div>
+</body>
+</html>
