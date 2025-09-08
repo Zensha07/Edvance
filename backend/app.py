@@ -19,8 +19,13 @@ if __name__ == '__main__':
     print("Database initialized and users table created.")
 from flask import Flask, request, jsonify
 import sqlite3
+from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
+
 
 def get_db_connection():
     conn = sqlite3.connect('backend/database.db')
