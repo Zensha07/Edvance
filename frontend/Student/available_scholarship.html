@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Available Scholarships - Student Portal</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    margin: 0; padding: 40px;
+    color: #1e293b;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #0c4a6e;
+    margin-bottom: 40px;
+    font-weight: 700;
+  }
+  .scholarship-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+    gap: 28px;
+  }
+  .scholarship-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 28px;
+    box-shadow: 0 12px 24px rgba(2,132,199,0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  .scholarship-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(2,132,199,0.3);
+  }
+  .sponsor-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px auto;
+    border-radius: 50%;
+    background: #bae6fd;
+    box-shadow: 0 6px 16px rgba(3,105,161,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .sponsor-logo img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+  }
+  .scholarship-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0369a1;
+    margin-bottom: 8px;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+  }
+  .amount-available {
+    font-size: 1.1rem;
+    color: #065f46;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .description {
+    font-size: 0.95rem;
+    color: #475569;
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.3em;
+  }
+  .apply-btn {
+    background: linear-gradient(90deg,#0ea5e9,#0284c7);
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  .apply-btn:hover {
+    background: linear-gradient(90deg,#0284c7,#0369a1);
+  }
+</style>
+</head>
+<body>
+  <h1>Available Scholarships for Female Students (₹25,000+ per annum)</h1>
+  <div class="scholarship-container" id="scholarshipContainer">
+    <!-- Scholarship cards inserted dynamically -->
+  </div>
+
+<script>
+  // Complete dataset with individual redirection URLs
+  const scholarships = [
+    {
+      name: "Kotak Kanya Scholarship",
+      amount: "₹1,50,000 per year",
+      description: "Supports academically outstanding girl students from underprivileged backgrounds pursuing professional degrees like engineering, medicine, law, and design. Helps reduce financial barriers to high-quality education.",
+      logo: "https://cdn-icons-png.flaticon.com/512/3534/3534155.png",
+      applyLink: "https://www.buddy4study.com/article/kotak-kanya-scholarship"
+    },
+    {
+      name: "Infosys Foundation STEM Stars Scholarship",
+      amount: "₹1,00,000 per annum",
+      description: "For female students pursuing STEM undergraduate degrees at top institutions. Covers tuition, living costs, and academic expenses to encourage girls in technology and engineering fields.",
+      logo: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      applyLink: "https://www.infosys.com/newsroom/press-releases/2023/launch-stem-scholarship-program.html"
+    },
+    {
+      name: "L’Oréal India For Young Women in Science Scholarship",
+      amount: "₹62,500 (UG), ₹1,00,000 (PG/PhD)",
+      description: "Supports meritorious girls in science stream pursuing higher education in scientific fields, promoting careers in research and healthcare.",
+      logo: "https://cdn-icons-png.flaticon.com/512/2948/2948853.png",
+      applyLink: "https://www.buddy4study.com/page/loreal-india-for-young-women-in-science-scholarships"
+    },
+    {
+      name: "Dr. Reddy’s Foundation Sashakt Scholarship",
+      amount: "₹80,000 per annum for 3 years",
+      description: "Empowers female students from economically weaker sections pursuing UG degrees in sciences, engineering, or medicine by providing financial support.",
+      logo: "https://cdn-icons-png.flaticon.com/512/175/175144.png",
+      applyLink: "https://www.sashaktscholarship.org/"
+    },
+    {
+      name: "Legrand Empowering Scholarship Program",
+      amount: "₹60,000 per year",
+      description: "For meritorious and disadvantaged girls, including differently-abled and affected by hardships, supporting professional degrees in fields like engineering and architecture.",
+      logo: "https://cdn-icons-png.flaticon.com/512/2593/2593183.png",
+      applyLink: "https://www.buddy4study.com/page/legrand-empowering-scholarship-program"
+    },
+    {
+      name: "AICTE Pragati Scholarship for Girls",
+      amount: "₹50,000 per annum",
+      description: "Supports girl students in technical diploma and degree courses with financial aid to cover tuition and other education-related expenses.",
+      logo: "https://cdn-icons-png.flaticon.com/512/2799/2799766.png",
+      applyLink: "https://www.aicte.gov.in/schemes/students-development-schemes/Pragati/General-Instructions"
+    },
+    {
+      name: "Women Scientists Scheme (DST)",
+      amount: "Up to ₹50,000 per annum",
+      description: "Enables qualified but unemployed women scientists/technologists to re-enter research roles, supporting their careers in science and engineering.",
+      logo: "https://cdn-icons-png.flaticon.com/512/4333/4333604.png",
+      applyLink: "https://dst.dashboard.nic.in/DashboardF.aspx"
+    },
+    {
+      name: "Swami Dayanand Scholarship",
+      amount: "Up to ₹50,000 per year",
+      description: "For financially underprivileged students enrolled in professional degree programs; 30% of scholarships reserved for female students to promote gender equality.",
+      logo: "https://cdn-icons-png.flaticon.com/512/3595/3595454.png",
+      applyLink: "https://www.swamidayanand.org/scholarship-india"
+    },
+    {
+      name: "Amazon Future Engineer Scholarship for Girls",
+      amount: "₹50,000 per annum",
+      description: "For girls pursuing computer science engineering, from economically weaker backgrounds. Combines financial support with mentorship.",
+      logo: "https://cdn-icons-png.flaticon.com/512/1380/1380338.png",
+      applyLink: "https://www.amazonfutureengineer.in/scholarship-and-internship#:~:text=The%20Amazon%20Future%20Engineer%20Scholarship%20is%20open%20to,with%20an%20annual%20income%20less%20than%20%E2%82%B93%20lakh."
+    },
+    {
+      name: "AICTE Saksham Scholarship for Differently-abled Girls",
+      amount: "₹50,000 per annum",
+      description: "Supports differently-abled girls pursuing technical education by covering tuition and related expenses.",
+      logo: "https://cdn-icons-png.flaticon.com/512/751/751519.png",
+      applyLink: "https://www.egovtschemes.com/aicte-saksham-scholarship-scheme-for-specially-abled-student-degree/#:~:text=The%20scheme%20aims%20to%20empower%20and%20support%20differently-abled,students%20and%203%20years%20for%20lateral%20entry%20students."
+    },
+    {
+      name: "Reliance Foundation Undergraduate Scholarship",
+      amount: "Up to ₹2,00,000 (total per course)",
+      description: "Merit-cum-means scholarship with focus on girls and differently-abled students pursuing undergraduate professional courses.",
+      logo: "https://cdn-icons-png.flaticon.com/512/196/196578.png",
+      applyLink: "https://scholarships.reliancefoundation.org/UG_Scholarship.aspx"
+    },
+    {
+      name: "NIRANKARI Rajmata Scholarship",
+      amount: "Tuition fee up to ₹50,000",
+      description: "Provides financial support for tuition fees to students, including girls, enrolled in graduation or post-graduation.",
+      logo: "https://cdn-icons-png.flaticon.com/512/2489/2489433.png",
+      applyLink: "https://www.nirankarifoundation.org/scholarship/"
+    },
+    {
+      name: "Central Sector Scheme of Scholarships for College and University Students",
+      amount: "Up to ₹20,000 per annum (close to threshold)",
+      description: "Rewards top-performing students (including girls) from low-income families to pursue higher education.",
+      logo: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+      applyLink: "https://scholarships.gov.in/Students"
+    },
+    {
+      name: "Internshala Career Scholarship for Girls",
+      amount: "₹25,000 (one-time)",
+      description: "Supports girls with strong career goals in any field, encouraging them to pursue ambitious career paths.",
+      logo: "https://cdn-icons-png.flaticon.com/512/2959/2959874.png",
+      applyLink: "https://internshala.com/blog/internshala-career-scholarship-girls-2023/"
+    },
+    {
+      name: "Santoor Women’s Scholarship",
+      amount: "₹24,000 per annum (slightly below but notable)",
+      description: "Helps girls from disadvantaged backgrounds in certain states pursue full-time graduate courses.",
+      logo: "https://cdn-icons-png.flaticon.com/512/4150/4150269.png",
+      applyLink: "https://www.santoorscholarships.com/index.php"
+    }
+  ];
+
+  const container = document.getElementById('scholarshipContainer');
+
+  scholarships.forEach(scholarship => {
+    const card = document.createElement('div');
+    card.className = 'scholarship-card';
+
+    const logoDiv = document.createElement('div');
+    logoDiv.className = 'sponsor-logo';
+
+    const logoImg = document.createElement('img');
+    logoImg.src = scholarship.logo;
+    logoImg.alt = scholarship.name + ' logo';
+
+    logoDiv.appendChild(logoImg);
+    card.appendChild(logoDiv);
+
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'scholarship-name';
+    nameDiv.textContent = scholarship.name;
+    card.appendChild(nameDiv);
+
+    const amountDiv = document.createElement('div');
+    amountDiv.className = 'amount-available';
+    amountDiv.textContent = `Amount: ${scholarship.amount}`;
+    card.appendChild(amountDiv);
+
+    const descDiv = document.createElement('div');
+    descDiv.className = 'description';
+    descDiv.textContent = scholarship.description;
+    card.appendChild(descDiv);
+
+    const applyBtn = document.createElement('button');
+    applyBtn.className = 'apply-btn';
+    applyBtn.textContent = 'Apply Now';
+    applyBtn.onclick = () => {
+      window.location.href = scholarship.applyLink;
+    };
+    card.appendChild(applyBtn);
+
+    container.appendChild(card);
+  });
+</script>
+</body>
+</html>
