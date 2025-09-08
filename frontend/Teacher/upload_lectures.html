@@ -69,14 +69,75 @@
     button:hover {
       background-color: #1838a1;
     }
+    .videos-list {
+      display: grid;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .video-item {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      transition: background-color 0.3s ease;
+    }
+    .video-item:hover {
+      background: #e9ecef;
+    }
+    .video-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .video-title {
+      font-weight: 600;
+      color: #0b3d91;
+      font-size: 1.1rem;
+    }
+    .video-details {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    .video-player {
+      width: 100%;
+      max-width: 600px;
+      height: 300px;
+      border-radius: 8px;
+      background: #000;
+    }
+    .video-link {
+      display: block;
+      padding: 10px 15px;
+      background: #0b3d91;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .video-link:hover {
+      background: #1838a1;
+      color: white;
+    }
+    .no-videos {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Upload Lecture</h1>
-    <form id="videoUploadForm">
+    
+    <!-- Upload Form -->
+    <form id="videoUploadForm" enctype="multipart/form-data">
       <label for="standard">Standard / College Year</label>
-      <select id="standard" required>
+      <select id="standard" name="standard" required>
         <option value="" selected disabled>Choose standard/year</option>
         <option>Class 6</option>
         <option>Class 7</option>
@@ -92,7 +153,7 @@
       </select>
 
       <label for="subject">Subject</label>
-      <select id="subject" required>
+      <select id="subject" name="subject" required>
         <option value="" selected disabled>Choose subject</option>
         <option>Mathematics</option>
         <option>Physics</option>
@@ -105,7 +166,7 @@
       </select>
 
       <label for="topic">Topic</label>
-      <input type="text" id="topic" placeholder="Enter topic" required />
+      <input type="text" id="topic" name="topic" placeholder="Enter topic" required />
 
       <div class="radio-group">
         <label><input type="radio" name="inputType" value="file" checked /> Upload Video File</label>
@@ -114,16 +175,24 @@
 
       <div id="videoFileInput">
         <label for="videoFile">Upload Video File</label>
-        <input type="file" id="videoFile" accept="video/*" />
+        <input type="file" id="videoFile" name="videoFile" accept="video/*" />
       </div>
 
       <div id="videoLinkInput" style="display:none;">
         <label for="videoLink">Video Link (YouTube, Vimeo etc.)</label>
-        <input type="url" id="videoLink" placeholder="https://example.com/video" />
+        <input type="url" id="videoLink" name="videoLink" placeholder="https://example.com/video" />
       </div>
 
       <button type="submit">Submit</button>
     </form>
+    
+    <!-- Existing Videos Section -->
+    <div id="existingVideos" style="margin-top: 40px;">
+      <h2 style="color: #0b3d91; text-align: center; margin-bottom: 20px;">Uploaded Videos</h2>
+      <div id="videosList">
+        <!-- Videos will be loaded here -->
+      </div>
+    </div>
   </div>
 
   <script>
@@ -131,6 +200,89 @@
     const videoLinkInput = document.getElementById('videoLinkInput');
     const inputTypeRadios = document.getElementsByName('inputType');
     const form = document.getElementById('videoUploadForm');
+
+    // Check authentication on page load
+    document.addEventListener('DOMContentLoaded', async function() {
+      const teacher = localStorage.getItem('teacher');
+      if (!teacher) {
+        alert('Please login first');
+        window.location.href = 'teacher_login_auth.html';
+        return;
+      }
+
+      // Verify session with server
+      try {
+        const response = await fetch('http://localhost:5001/api/teacher/me', {
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          localStorage.removeItem('teacher');
+          alert('Session expired. Please login again.');
+          window.location.href = 'teacher_login_auth.html';
+          return;
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        localStorage.removeItem('teacher');
+        alert('Authentication failed. Please login again.');
+        window.location.href = 'teacher_login_auth.html';
+        return;
+      }
+
+      // Load videos after authentication
+      loadVideos();
+    });
+
+    // Load videos from database
+    async function loadVideos() {
+      try {
+        const response = await fetch('http://localhost:5001/api/videos', {
+          credentials: 'include'
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        displayVideos(data.videos);
+      } catch (error) {
+        console.error('Error loading videos:', error);
+        document.getElementById('videosList').innerHTML = '<div class="no-videos">Error loading videos. Please try again.</div>';
+      }
+    }
+
+    // Display videos in the UI
+    function displayVideos(videos) {
+      const videosList = document.getElementById('videosList');
+      
+      if (videos.length === 0) {
+        videosList.innerHTML = '<div class="no-videos">No videos uploaded yet. Upload your first video above!</div>';
+        return;
+      }
+
+      videosList.innerHTML = '<div class="videos-list">' + 
+        videos.map(video => `
+          <div class="video-item">
+            <div class="video-header">
+              <div class="video-title">${video.topic}</div>
+            </div>
+            <div class="video-details">
+              ${video.standard} • ${video.subject} • ${video.file_name}
+              <br>
+              <small>Uploaded: ${new Date(video.uploaded_at).toLocaleDateString()}</small>
+            </div>
+            ${video.video_type === 'file' ? 
+              `<video class="video-player" controls>
+                <source src="http://localhost:5001/api/videos/${video.id}/stream" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>` :
+              `<a href="${video.video_url}" target="_blank" class="video-link">Watch External Video</a>`
+            }
+          </div>
+        `).join('') + 
+        '</div>';
+    }
 
     // Toggle input visibility based on radio selection
     inputTypeRadios.forEach(radio => {
@@ -145,12 +297,14 @@
       });
     });
 
-    form.addEventListener('submit', (e) => {
+    // Handle form submission
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const standard = document.getElementById('standard').value;
       const subject = document.getElementById('subject').value;
       const topic = document.getElementById('topic').value.trim();
+      const selectedInput = document.querySelector('input[name="inputType"]:checked').value;
 
       // Validate standard, subject, topic
       if (!standard || !subject || !topic) {
@@ -158,8 +312,12 @@
         return;
       }
 
-      // Check input type
-      let selectedInput = document.querySelector('input[name="inputType"]:checked').value;
+      // Create FormData for upload
+      const formData = new FormData();
+      formData.append('standard', standard);
+      formData.append('subject', subject);
+      formData.append('topic', topic);
+      formData.append('video_type', selectedInput);
 
       if (selectedInput === 'file') {
         const videoFile = document.getElementById('videoFile').files[0];
@@ -171,19 +329,44 @@
           alert('Please upload a valid video file.');
           return;
         }
-        alert(`Standard: ${standard}\nSubject: ${subject}\nTopic: ${topic}\nVideo File: ${videoFile.name}\n\n(Form submission simulated)`);
+        formData.append('file', videoFile);
       } else {
         const videoLink = document.getElementById('videoLink').value.trim();
         if (!videoLink) {
           alert('Please provide a video link.');
           return;
         }
-        alert(`Standard: ${standard}\nSubject: ${subject}\nTopic: ${topic}\nVideo Link: ${videoLink}\n\n(Form submission simulated)`);
+        formData.append('video_url', videoLink);
       }
 
-      form.reset();
-      videoLinkInput.style.display = 'none';
-      videoFileInput.style.display = 'block';
+      try {
+        const response = await fetch('http://localhost:5001/api/videos', {
+          method: 'POST',
+          credentials: 'include',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('✅ Video uploaded successfully!');
+          // Reset form
+          form.reset();
+          videoLinkInput.style.display = 'none';
+          videoFileInput.style.display = 'block';
+          // Reload videos list
+          loadVideos();
+        } else {
+          alert('Error uploading video: ' + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error uploading video: ' + error.message + '. Please make sure the Flask server is running on port 5001.');
+      }
     });
   </script>
 </body>

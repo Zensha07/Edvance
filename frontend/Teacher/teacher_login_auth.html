@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teacher Login - Edvance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      color: #0b3d91;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="email"], input[type="password"], input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ccd7e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: #0b3d91;
+      box-shadow: 0 0 7px rgba(11, 61, 145, 0.25);
+    }
+    button {
+      width: 100%;
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 15px;
+    }
+    button:hover {
+      background-color: #1838a1;
+    }
+    .switch-form {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .switch-form a {
+      color: #0b3d91;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .switch-form a:hover {
+      text-decoration: underline;
+    }
+    .error {
+      color: #e74c3c;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    .success {
+      color: #27ae60;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .back-link a {
+      color: #0b3d91;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="pageTitle">Teacher Login</h1>
+    
+    <!-- Login Form -->
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      
+      <button type="submit" id="loginBtn">Login</button>
+    </form>
+    
+    <!-- Register Form (hidden by default) -->
+    <form id="registerForm" style="display: none;">
+      <div class="form-group">
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName" name="name" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="regEmail">Email Address</label>
+        <input type="email" id="regEmail" name="email" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" name="password" required />
+      </div>
+      
+      <button type="submit" id="registerBtn">Register</button>
+    </form>
+    
+    <div class="switch-form">
+      <a href="#" id="switchLink">Don't have an account? Register here</a>
+    </div>
+    
+    <div class="back-link">
+      <a href="../index.html">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const switchLink = document.getElementById('switchLink');
+    const pageTitle = document.getElementById('pageTitle');
+    const loginBtn = document.getElementById('loginBtn');
+    const registerBtn = document.getElementById('registerBtn');
+
+    let isLogin = true;
+
+    // Switch between login and register
+    switchLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      isLogin = !isLogin;
+      
+      if (isLogin) {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        pageTitle.textContent = 'Teacher Login';
+        switchLink.textContent = "Don't have an account? Register here";
+      } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        pageTitle.textContent = 'Teacher Registration';
+        switchLink.textContent = "Already have an account? Login here";
+      }
+    });
+
+    // Show error message
+    function showError(message) {
+      const existingError = document.querySelector('.error');
+      if (existingError) existingError.remove();
+      
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error';
+      errorDiv.textContent = message;
+      loginForm.insertBefore(errorDiv, loginForm.firstChild);
+    }
+
+    // Show success message
+    function showSuccess(message) {
+      const existingSuccess = document.querySelector('.success');
+      if (existingSuccess) existingSuccess.remove();
+      
+      const successDiv = document.createElement('div');
+      successDiv.className = 'success';
+      successDiv.textContent = message;
+      registerForm.insertBefore(successDiv, registerForm.firstChild);
+    }
+
+    // Login form submission
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        const response = await fetch('http://localhost:5001/api/teacher/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ email, password })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Store teacher info in localStorage
+          localStorage.setItem('teacher', JSON.stringify(result.teacher));
+          alert('Login successful! Redirecting to dashboard...');
+          window.location.href = 'teacher_dashboard.html';
+        } else {
+          showError(result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showError('Login failed. Please try again.');
+      }
+    });
+
+    // Register form submission
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      
+      try {
+        const response = await fetch('http://localhost:5001/api/teacher/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, password })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showSuccess('Registration successful! Please login.');
+          // Switch to login form
+          isLogin = true;
+          loginForm.style.display = 'block';
+          registerForm.style.display = 'none';
+          pageTitle.textContent = 'Teacher Login';
+          switchLink.textContent = "Don't have an account? Register here";
+        } else {
+          showError(result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showError('Registration failed. Please try again.');
+      }
+    });
+
+    // Check if already logged in
+    window.addEventListener('load', () => {
+      const teacher = localStorage.getItem('teacher');
+      if (teacher) {
+        // Already logged in, redirect to dashboard
+        window.location.href = 'teacher_dashboard.html';
+      }
+    });
+  </script>
+</body>
+</html>

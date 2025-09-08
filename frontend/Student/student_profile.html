@@ -306,6 +306,95 @@
 
 <script>
   let currentStep = 1;
+  let hasExistingProfile = false;
+  
+  // Check for existing profile data on page load
+  async function checkExistingProfile() {
+    try {
+      const response = await fetch('http://localhost:5001/api/student/profile');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (result.profile) {
+        hasExistingProfile = true;
+        displayExistingProfile(result.profile);
+      }
+    } catch (error) {
+      console.error('Error checking existing profile:', error);
+      // Don't show error to user, just proceed with form
+    }
+  }
+  
+  // Display existing profile data
+  function displayExistingProfile(profile) {
+    // Hide the form and show profile display
+    document.querySelector('.container').innerHTML = `
+      <div style="text-align: center; padding: 40px;">
+        <h1 style="color: #2a5a8a; margin-bottom: 30px;">Your Student Profile</h1>
+        <div style="background: #f0f7ff; border-radius: 16px; padding: 30px; margin-bottom: 20px; text-align: left;">
+          <h2 style="color: #2a5a8a; margin-bottom: 20px;">Personal Information</h2>
+          <p><strong>Name:</strong> ${profile.personal.name || 'N/A'}</p>
+          <p><strong>Father's Name:</strong> ${profile.personal.fatherName || 'N/A'}</p>
+          <p><strong>Mother's Name:</strong> ${profile.personal.motherName || 'N/A'}</p>
+          <p><strong>Date of Birth:</strong> ${profile.personal.dob || 'N/A'}</p>
+          <p><strong>Contact:</strong> ${profile.personal.contact || 'N/A'}</p>
+          <p><strong>Financial Condition:</strong> ${profile.personal.financial || 'N/A'}</p>
+          <p><strong>Parent Contact:</strong> ${profile.personal.parentContact || 'N/A'}</p>
+        </div>
+        
+        <div style="background: #f0f7ff; border-radius: 16px; padding: 30px; margin-bottom: 20px; text-align: left;">
+          <h2 style="color: #2a5a8a; margin-bottom: 20px;">Academic Information</h2>
+          <p><strong>Status:</strong> ${profile.academic.status || 'N/A'}</p>
+          ${profile.academic.status === 'School' ? `
+            <p><strong>School Name:</strong> ${profile.academic.schoolName || 'N/A'}</p>
+            <p><strong>State:</strong> ${profile.academic.schoolState || 'N/A'}</p>
+            <p><strong>Class:</strong> ${profile.academic.schoolClass || 'N/A'}</p>
+            <p><strong>Previous Class %:</strong> ${profile.academic.schoolPercent || 'N/A'}</p>
+            <p><strong>Description:</strong> ${profile.academic.schoolDesc || 'N/A'}</p>
+          ` : profile.academic.status === 'College' ? `
+            <p><strong>Institution:</strong> ${profile.academic.collegeName || 'N/A'}</p>
+            <p><strong>State:</strong> ${profile.academic.collegeState || 'N/A'}</p>
+            <p><strong>Course:</strong> ${profile.academic.collegeCourse || 'N/A'}</p>
+            <p><strong>Year:</strong> ${profile.academic.collegeYear || 'N/A'}</p>
+            <p><strong>Class 10th %:</strong> ${profile.academic.class10Perc || 'N/A'}</p>
+            <p><strong>Class 12th %:</strong> ${profile.academic.class12Perc || 'N/A'}</p>
+          ` : ''}
+        </div>
+        
+        <div style="background: #f0f7ff; border-radius: 16px; padding: 30px; margin-bottom: 20px; text-align: left;">
+          <h2 style="color: #2a5a8a; margin-bottom: 20px;">Residential Information</h2>
+          <p><strong>State:</strong> ${profile.residential.state || 'N/A'}</p>
+          <p><strong>City:</strong> ${profile.residential.city || 'N/A'}</p>
+          <p><strong>Address:</strong> ${profile.residential.addressDesc || 'N/A'}</p>
+          <p><strong>Pincode:</strong> ${profile.residential.pincode || 'N/A'}</p>
+        </div>
+        
+        <button onclick="editProfile()" style="background: linear-gradient(90deg, #1e5fa0 0%, #74a1e4 100%); color: white; padding: 15px 45px; border: none; border-radius: 12px; font-size: 1.3em; font-weight: 700; cursor: pointer; margin-right: 20px;">
+          Edit Profile
+        </button>
+        <button onclick="goBack()" style="background: #aac5ef; color: #0f2b57; padding: 15px 45px; border: none; border-radius: 12px; font-size: 1.3em; font-weight: 700; cursor: pointer;">
+          Back to Dashboard
+        </button>
+      </div>
+    `;
+  }
+  
+  function editProfile() {
+    // Reload the page to show the form
+    window.location.reload();
+  }
+  
+  function goBack() {
+    window.location.href = 'student_dashboard.html';
+  }
+  
+  // Check for existing profile when page loads
+  checkExistingProfile();
+  
   function showStep(step) {
     document.getElementById('step1').style.display = step === 1 ? 'block' : 'none';
     document.getElementById('step2').style.display = step === 2 ? 'block' : 'none';
@@ -461,7 +550,7 @@
     finishBtn.disabled = !step3Form.checkValidity();
   });
 
-  finishBtn.onclick = () => {
+  finishBtn.onclick = async () => {
     if(!step3Form.checkValidity()){
       step3Form.reportValidity();
       return;
@@ -472,8 +561,43 @@
       addressDesc: document.getElementById('addressDesc').value,
       pincode: document.getElementById('pincode').value
     };
-    localStorage.setItem('residentialData', JSON.stringify(residentialData));
-    alert('Congratulations! Your profile has been successfully created.');
+    
+    // Get all data from localStorage
+    const personalData = JSON.parse(localStorage.getItem('profileData') || '{}');
+    const academicData = JSON.parse(localStorage.getItem('academicData') || '{}');
+    
+    // Save to database
+    try {
+      const response = await fetch('http://localhost:5001/api/student/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          personal: personalData,
+          academic: academicData,
+          residential: residentialData
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      if (result.success) {
+        alert('Congratulations! Your profile has been successfully created and saved.');
+        // Clear localStorage after successful save
+        localStorage.removeItem('profileData');
+        localStorage.removeItem('academicData');
+        localStorage.removeItem('residentialData');
+      } else {
+        alert('Error saving profile: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error saving profile: ' + error.message + '. Please make sure the Flask server is running on port 5001.');
+    }
   };
 </script>
 </body>
