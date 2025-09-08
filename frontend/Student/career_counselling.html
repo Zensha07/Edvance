@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Career Counselling</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #e7f0fd;
+    padding: 40px;
+    color: #1e293b;
+  }
+  h1 {
+    text-align: center;
+    color: #0c4a6e;
+    margin-bottom: 40px;
+  }
+  form {
+    max-width: 700px;
+    margin: 0 auto;
+    background: rgb(125, 185, 209);
+    padding: 28px 40px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(32, 78, 175, 0.15);
+  }
+  label {
+    display: block;
+    margin-top: 20px;
+    font-weight: 700;
+    color: #374151;
+  }
+  input[type="text"], select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid #a1aebf;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  #collegesList {
+    margin-top: 20px;
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 18px 22px;
+    box-shadow: inset 0 1px 4px rgba(2, 132, 199, 0.15);
+    font-size: 1rem;
+    color: #1e293b;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  #collegesList ul {
+    padding-left: 20px;
+    list-style-type: disc;
+  }
+  #collegesList ul li {
+    margin-bottom: 8px;
+  }
+  button {
+    margin-top: 32px;
+    background: linear-gradient(90deg,#0ea5e9,#0284c7);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 14px 48px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: linear-gradient(90deg,#0284c7,#0369a1);
+  }
+</style>
+</head>
+<body>
+
+<h1>Career Counselling Form</h1>
+
+<form id="careerForm">
+  <label for="studentName">Name *</label>
+  <input type="text" id="studentName" name="studentName" required />
+
+  <label for="careerInterest">Select Your Career Interest *</label>
+  <select id="careerInterest" name="careerInterest" required>
+    <option value="">Select a Career Interest</option>
+    <option>Administration</option>
+    <option>Scientific Research</option>
+    <option>Teaching and Education</option>
+    <option>Photography</option>
+    <option>Designing</option>
+    <option>Law</option>
+    <option>Sales and Marketing</option>
+    <option>Operations and Management</option>
+    <option>Writing and Content Creation</option>
+    <option>Engineering</option>
+    <option>Medical</option>
+  </select>
+
+  <div id="collegesList" style="display:none;">
+    <strong>Top Colleges in Selected Field:</strong>
+    <ul id="collegeNames"></ul>
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const careerInterestSelect = document.getElementById('careerInterest');
+  const collegesListDiv = document.getElementById('collegesList');
+  const collegeNamesUl = document.getElementById('collegeNames');
+
+  const collegeData = {
+    "Administration": [
+      "Faculty of Management Studies (FMS), Delhi University",
+      "Shaheed Sukhdev College of Business Studies, Delhi",
+      "Symbiosis Centre for Management Studies, Pune",
+      "Christ University, Bengaluru",
+      "NMIMS, Mumbai",
+      "Loyola College, Chennai",
+      "Presidency College, Kolkata",
+      "Jamia Millia Islamia, New Delhi",
+      "Madras Christian College, Chennai",
+      "St. Xavier’s College, Mumbai",
+      "Indian Institute of Management (IIM) Ahmedabad",
+      "IIM Bangalore",
+      "IIM Calcutta",
+      "IIM Lucknow",
+      "XLRI Jamshedpur"
+    ],
+    "Scientific Research": [
+      "Indian Institute of Science (IISc), Bengaluru",
+      "Tata Institute of Fundamental Research (TIFR), Mumbai",
+      "Jawaharlal Nehru University (JNU), New Delhi",
+      "Institute of Genomics and Integrative Biology (IGIB), Delhi",
+      "National Institute of Science Education and Research (NISER), Bhubaneswar",
+      "Indian Institute of Technology Bombay (IITB), Mumbai",
+      "Indian Institute of Technology Delhi (IITD), New Delhi",
+      "National Chemical Laboratory (NCL), Pune",
+      "Birla Institute of Technology and Science (BITS), Pilani",
+      "University of Hyderabad",
+      "Indian Institute of Technology Madras (IITM), Chennai",
+      "Delhi University",
+      "Banaras Hindu University (BHU)",
+      "Tata Memorial Centre, Mumbai",
+      "All India Institute of Medical Sciences (AIIMS), New Delhi"
+    ],
+    "Teaching and Education": [
+      "Delhi University (DU)",
+      "Jawaharlal Nehru University (JNU)",
+      "Banaras Hindu University (BHU)",
+      "Indira Gandhi National Open University (IGNOU)",
+      "Tata Institute of Social Sciences (TISS)",
+      "Azim Premji University",
+      "Lady Shri Ram College for Women",
+      "University of Mumbai",
+      "Jamia Millia Islamia (JMI)",
+      "Maharaja Sayajirao University, Vadodara",
+      "Tamil Nadu Teachers Education University",
+      "Aligarh Muslim University (AMU)",
+      "Christ University",
+      "Tata Institute of Fundamental Research",
+      "SNDT Women’s University, Mumbai"
+    ],
+    "Photography": [
+      "National Institute of Design (NID), Ahmedabad",
+      "Film and Television Institute of India (FTII), Pune",
+      "Delhi College of Photography",
+      "Satyajit Ray Film and Television Institute, Kolkata",
+      "Indian Institute of Photography, Noida",
+      "Pearl Academy, Delhi",
+      "Indian School of Design and Innovation, Bengaluru",
+      "Shiv Nadar University, Greater Noida",
+      "Symbiosis Institute of Design, Pune",
+      "Indian National Institute of Photography, Hyderabad",
+      "Abhinav Kala Mahavidyalaya, Pune",
+      "Vishwa Kala Sangam, Bengaluru",
+      "Vishwakarma University, Pune",
+      "Apeejay Institute of Design, Delhi",
+      "L.V. Prasad Film & TV Academy, Hyderabad"
+    ],
+    "Designing": [
+      "National Institute of Design (NID), Ahmedabad",
+      "Indian Institute of Technology Bombay (IDC), Mumbai",
+      "National Institute of Fashion Technology (NIFT), Delhi",
+      "Srishti Institute of Art, Design and Technology, Bengaluru",
+      "Pearl Academy",
+      "MIT Institute of Design",
+      "Symbiosis Institute of Design, Pune",
+      "Lovely Professional University",
+      "Indian Institute of Technology Guwahati (IITG)",
+      "Jawaharlal Nehru Architecture and Fine Arts University (JNAFAU), Hyderabad",
+      "Raffles Design International, Mumbai",
+      "Apeejay Institute of Design, Delhi",
+      "Woxsen School of Arts and Design, Hyderabad",
+      "MIT School of Fashion Technology, Pune",
+      "DJ Academy of Design, Coimbatore"
+    ],
+    "Law": [
+      "National Law School of India University (NLSIU), Bengaluru",
+      "NALSAR University of Law, Hyderabad",
+      "West Bengal National University of Juridical Sciences (WBNUJS), Kolkata",
+      "Faculty of Law, Delhi University",
+      "Symbiosis Law School, Pune",
+      "Jindal Global Law School",
+      "Gujarat National Law University",
+      "Dr. Ram Manohar Lohiya National Law University, Lucknow",
+      "Hidayatullah National Law University, Raipur",
+      "KIIT School of Law, Bhubaneswar",
+      "Army Institute of Law, Mohali",
+      "National University of Advanced Legal Studies (NUALS), Kochi",
+      "Indian Law Society’s Law College, Pune",
+      "IFIM Law School, Bangalore",
+      "Chanakya National Law University, Patna"
+    ],
+    "Sales and Marketing": [
+      "IIM Ahmedabad",
+      "IIM Bangalore",
+      "IIM Calcutta",
+      "XLRI Jamshedpur",
+      "SP Jain Institute of Management and Research, Mumbai",
+      "Indian School of Business (ISB), Hyderabad",
+      "Symbiosis Institute of Business Management, Pune",
+      "NMIMS Mumbai",
+      "Institute of Management Technology (IMT), Ghaziabad",
+      "Great Lakes Institute of Management, Chennai",
+      "Faculty of Management Studies (FMS), Delhi",
+      "TAPMI, Manipal",
+      "IIM Lucknow",
+      "IIM Indore",
+      "IIM Kozhikode"
+    ],
+    "Operations and Management": [
+      "IIM Calcutta",
+      "IIM Lucknow",
+      "NMIMS Mumbai",
+      "Symbiosis Institute of Business Management",
+      "IIM Bangalore",
+      "Department of Management Studies, IIT Delhi",
+      "IIM Indore",
+      "SP Jain Institute of Management and Research",
+      "IIM Kozhikode",
+      "XLRI Jamshedpur",
+      "Indian School of Business (ISB)",
+      "Institute of Rural Management, Anand (IRMA)",
+      "Great Lakes Institute of Management",
+      "TAPMI Manipal",
+      "KJ Somaiya Institute of Management"
+    ],
+    "Writing and Content Creation": [
+      "Symbiosis Institute of Media and Communication, Pune",
+      "Asian College of Journalism, Chennai",
+      "Mudra Institute of Communications (MICA), Ahmedabad",
+      "Indian Institute of Mass Communication (IIMC), New Delhi",
+      "Christ University, Bengaluru",
+      "St. Xavier’s College, Mumbai",
+      "Lady Shri Ram College, Delhi",
+      "Amity University, Noida",
+      "Delhi University",
+      "Jawaharlal Nehru University",
+      "University of Mumbai",
+      "Manipal University",
+      "Banaras Hindu University (BHU)",
+      "Jamia Millia Islamia",
+      "Bharatiya Vidya Bhavan, Mumbai"
+    ],
+    "Engineering": [
+      "IIT Madras, Chennai",
+      "IIT Delhi, New Delhi",
+      "IIT Bombay, Mumbai",
+      "IIT Kanpur, Kanpur",
+      "IIT Kharagpur, Kharagpur",
+      "IIT Roorkee, Roorkee",
+      "IIT Hyderabad, Hyderabad",
+      "IIT Guwahati, Guwahati",
+      "NIT Tiruchirapalli, Tamil Nadu",
+      "IIT BHU, Varanasi",
+      "Birla Institute of Technology and Science (BITS), Pilani",
+      "Indian Institute of Technology (ISM), Dhanbad",
+      "College of Engineering, Pune",
+      "Delhi Technological University (DTU), Delhi",
+      "Vellore Institute of Technology (VIT), Vellore",
+      "Manipal Institute of Technology, Manipal",
+      "Thapar Institute of Engineering and Technology, Patiala",
+      "PSG College of Technology, Coimbatore",
+      "Anna University, Chennai",
+      "Netaji Subhas University of Technology (NSUT), Delhi",
+      "SRM Institute of Science and Technology, Chennai",
+      "International Institute of Information Technology (IIIT), Hyderabad",
+      "Jamia Millia Islamia (JMI), New Delhi",
+      "Kalinga Institute of Industrial Technology (KIIT), Bhubaneswar",
+      "Amrita Vishwa Vidyapeetham, Coimbatore"
+    ],
+    "Medical": [
+      "All India Institute of Medical Sciences (AIIMS), New Delhi",
+      "Christian Medical College (CMC), Vellore",
+      "Armed Forces Medical College (AFMC), Pune",
+      "Maulana Azad Medical College (MAMC), Delhi",
+      "King George's Medical University (KGMU), Lucknow",
+      "Grant Medical College, Mumbai",
+      "Seth GS Medical College, Mumbai",
+      "Madras Medical College, Chennai",
+      "Lady Hardinge Medical College, Delhi",
+      "Jawaharlal Institute of Postgraduate Medical Education and Research (JIPMER), Puducherry",
+      "KEM Hospital, Mumbai",
+      "King Edward Memorial Hospital, Mumbai",
+      "Bangalore Medical College and Research Institute, Bangalore",
+      "Lokmanya Tilak Municipal Medical College, Mumbai",
+      "Sri Ramachandra Medical College and Research Institute, Chennai",
+      "B.J. Medical College, Ahmedabad",
+      "Calcutta Medical College, Kolkata",
+      "SMS Medical College, Jaipur",
+      "Government Medical College, Nagpur",
+      "Kasturba Medical College, Manipal",
+      "Gauhati Medical College, Guwahati",
+      "S.M.S. Medical College, Jaipur",
+      "IMS BHU, Varanasi",
+      "Government Medical College, Thiruvananthapuram",
+      "Anna Medical College, Chennai"
+    ]
+  };
+
+  careerInterestSelect.addEventListener('change', function () {
+    const selectedCareer = this.value;
+    collegeNamesUl.innerHTML = '';
+
+    if (collegeData[selectedCareer]) {
+      collegesListDiv.style.display = 'block';
+      collegeData[selectedCareer].forEach(college => {
+        const li = document.createElement('li');
+        li.textContent = college;
+        collegeNamesUl.appendChild(li);
+      });
+    } else {
+      collegesListDiv.style.display = 'none';
+    }
+  });
+
+  document.getElementById('careerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = document.getElementById('studentName').value.trim();
+    const interest = careerInterestSelect.value;
+    if (!name || !interest) {
+      alert('Please fill all required fields.');
+      return;
+    }
+    alert(`Thank you, ${name}! Your interest in ${interest} has been noted.`);
+    this.reset();
+    collegesListDiv.style.display = 'none';
+    collegeNamesUl.innerHTML = '';
+  });
+</script>
+
+</body>
+</html>
