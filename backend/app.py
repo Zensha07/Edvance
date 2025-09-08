@@ -1,7 +1,17 @@
+import os
 import sqlite3
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+# Absolute path pointing to the database file in the same folder as app.py
+DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
+
 
 def init_db():
-    conn = sqlite3.connect('backend/database.db')  # Connect to or create the database file
+    conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
@@ -14,23 +24,12 @@ def init_db():
     conn.commit()
     conn.close()
 
-if __name__ == '__main__':
-    init_db()
-    print("Database initialized and users table created.")
-from flask import Flask, request, jsonify
-import sqlite3
-from flask import Flask
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
-
-
 
 def get_db_connection():
-    conn = sqlite3.connect('backend/database.db')
+    conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -38,7 +37,8 @@ def signup():
     email = data.get('email')
     password = data.get('password')
     role = data.get('role')
-    # TODO: In production, hash your passwords before storing
+
+    # TODO: Hash passwords before production use
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -53,6 +53,7 @@ def signup():
         return jsonify({'message': 'Email already registered'}), 400
     conn.close()
     return jsonify({'message': 'User signed up successfully'})
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -74,5 +75,9 @@ def login():
     else:
         return jsonify({'message': 'Invalid email or password'}), 401
 
+
 if __name__ == '__main__':
+    init_db()
+    print("Database initialized and users table created.")
     app.run(debug=True)
+
