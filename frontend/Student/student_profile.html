@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Profile - Multi-Step Form</title>
+<style>
+  body {
+    background: linear-gradient(135deg, #c7eafe 30%, #e7f0fd 100%);
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    margin: 0; padding: 0;
+  }
+  .container {
+    max-width: 650px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 35px #a0b6db;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  h1 {
+    text-align: center;
+    color: #2a5a8a;
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    font-family: 'Oswald', sans-serif;
+  }
+  .progress-container {
+    background: #e1ecfc;
+    border-radius: 16px;
+    height: 18px;
+    width: 100%;
+    margin-bottom: 30px;
+    box-shadow: inset 0 1px 6px rgba(168, 196, 241, 0.6);
+  }
+  .progress-bar {
+    background: linear-gradient(270deg, #2771d1 0%, #69a9f6 100%);
+    height: 100%;
+    width: 33.3%;
+    border-radius: 16px;
+    transition: width 0.6s ease;
+  }
+  label, legend {
+    display: block;
+    font-weight: 700;
+    font-size: 1.15em;
+    color: #325682;
+    margin-bottom: 8px;
+    font-family: 'Montserrat', sans-serif;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 13px 12px;
+    border: 2px solid #b9d0f9;
+    border-radius: 8px;
+    font-size: 1.12em;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    background: #f7fbff;
+    box-sizing: border-box;
+  }
+  textarea {
+    height: 80px;
+    resize: vertical;
+  }
+  .radio-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+  .radio-group label {
+    cursor: pointer;
+    background: #d8eaff;
+    padding: 12px 28px;
+    border-radius: 12px;
+    box-shadow: 0 2px 7px rgba(56, 98, 163, 0.2);
+    transition: background-color 0.3s ease;
+    font-size: 1.1em;
+    color: #27507b;
+    user-select: none;
+  }
+  .radio-group input[type="radio"] {
+    display: none;
+  }
+  .radio-group input[type="radio"]:checked + label {
+    background-color: #2b66bd;
+    color: #fff;
+    box-shadow: 0 5px 14px rgba(27, 51, 105, 0.7);
+  }
+  button {
+    background: linear-gradient(90deg, #1e5fa0 0%, #74a1e4 100%);
+    color: #fff;
+    padding: 15px 45px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.3em;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 0;
+    transition: background-color 0.3s ease;
+    letter-spacing: 1.2px;
+  }
+  button:disabled {
+    background: #aac6ed;
+    cursor: not-allowed;
+  }
+  button:hover:not(:disabled) {
+    background-color: #1b4e86;
+  }
+  #backBtn {
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    background: #aac5ef;
+    color: #0f2b57;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 7px #7ea4db;
+    transition: background-color 0.3s ease;
+  }
+  #backBtn:hover {
+    background: #82a5f0;
+  }
+  .step {
+    display: none;
+  }
+  .step.active {
+    display: block;
+  }
+  .panel {
+    background: #f0f7ff;
+    border-radius: 16px;
+    padding: 25px 28px;
+    box-shadow: 0 8px 28px rgba(61, 101, 192, 0.12);
+    margin-bottom: 30px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <button id="backBtn" onclick="prevStep()" style="display:none;">← Back</button>
+  <h1 id="stepTitle">Step 1: Personal Profile</h1>
+  <div class="progress-container" aria-label="Progress">
+    <div id="progressBar" class="progress-bar"></div>
+  </div>
+
+  <!-- Step 1: Personal Profile -->
+  <form id="step1" class="step active" novalidate>
+    <div class="form-group">
+      <label for="name">My Name</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+    <div class="form-group">
+      <label for="fatherName">Father's Name</label>
+      <input type="text" id="fatherName" name="fatherName" required />
+    </div>
+    <div class="form-group">
+      <label for="motherName">Mother's Name</label>
+      <input type="text" id="motherName" name="motherName" required />
+    </div>
+    <div class="form-group">
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" required />
+    </div>
+    <div class="form-group">
+      <label for="contact">Contact Number</label>
+      <input type="tel" id="contact" pattern="[0-9]{10}" placeholder="10 digit number" name="contact" required />
+    </div>
+    <div class="form-group">
+      <label for="financial">Financial Condition (Family Income)</label>
+      <select id="financial" name="financial" required>
+        <option value="">Select Income Range</option>
+        <option value="Below 1 Lakh">Below ₹1,00,000</option>
+        <option value="1-3 Lakhs">₹1,00,000 - ₹3,00,000</option>
+        <option value="3-5 Lakhs">₹3,00,000 - ₹5,00,000</option>
+        <option value="5-10 Lakhs">₹5,00,000 - ₹10,00,000</option>
+        <option value="Above 10 Lakhs">Above ₹10,00,000</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="parentContact">Parent Contact Number</label>
+      <input type="tel" id="parentContact" pattern="[0-9]{10}" placeholder="10 digit number" name="parentContact" required />
+    </div>
+    <button type="button" id="nextBtn1" disabled>Save & Continue</button>
+  </form>
+
+  <!-- Step 2: Academic Details -->
+  <form id="step2" class="step" novalidate>
+    <fieldset>
+      <legend>Select Current Academic Status</legend>
+      <div class="radio-group">
+        <input type="radio" id="schoolRadio" name="status" value="School" required />
+        <label for="schoolRadio">School</label>
+        <input type="radio" id="collegeRadio" name="status" value="College" required />
+        <label for="collegeRadio">College</label>
+      </div>
+    </fieldset>
+
+    <div id="schoolSection" class="panel" style="display:none;">
+      <div class="form-group">
+        <label for="schoolName">Name of School</label>
+        <input type="text" id="schoolName" name="schoolName" />
+      </div>
+      <div class="form-group">
+        <label for="schoolState">State</label>
+        <select id="schoolState" name="schoolState" required>
+          <option value="">Select State</option>
+          <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option><option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu & Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="schoolClass">Class Currently Studying In</label>
+        <select id="schoolClass" name="schoolClass" required>
+          <option value="">Select Class</option>
+          <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option>7th</option><option>8th</option><option>9th</option><option>10th</option><option>11th</option><option>12th</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="schoolPercent">Percentage in Previous Class</label>
+        <input type="number" id="schoolPercent" name="schoolPercent" min="0" max="100" step="0.01" placeholder="%" />
+      </div>
+      <div class="form-group">
+        <label for="schoolDesc">Description</label>
+        <textarea id="schoolDesc" name="schoolDesc" placeholder="Tell us about your interests or anything"></textarea>
+      </div>
+      <button type="button" id="saveSchoolBtn" disabled>Save and Proceed</button>
+    </div>
+
+    <div id="collegeSection" class="panel" style="display:none;">
+      <div class="form-group">
+        <label for="collegeName">Name of Institution</label>
+        <input type="text" id="collegeName" name="collegeName" />
+      </div>
+      <div class="form-group">
+        <label for="collegeState">State</label>
+        <select id="collegeState" name="collegeState" required>
+          <option value="">Select State</option>
+          <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option><option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu & Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="collegeCourse">Course</label>
+        <select id="collegeCourse" name="collegeCourse" required>
+          <option value="">Select Course</option>
+          <option>B.A.</option><option>B.Sc.</option><option>B.Com</option><option>BCA</option><option>B.Tech</option><option>B.E.</option><option>MBBS</option><option>BDS</option><option>LLB</option><option>MBA</option><option>MCA</option><option>M.Tech</option><option>M.Sc.</option><option>M.Com</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="collegeYear">Year of Study</label>
+        <select id="collegeYear" name="collegeYear" required>
+          <option value="">Select Year</option>
+          <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option>
+        </select>
+      </div>
+      <div id="additionalPerc" style="display:none;">
+        <div class="form-group">
+          <label for="class10Perc">Class 10th Percentage</label>
+          <input type="number" id="class10Perc" name="class10Perc" min="0" max="100" step="0.01" placeholder="%" />
+        </div>
+        <div class="form-group">
+          <label for="class12Perc">Class 12th Percentage</label>
+          <input type="number" id="class12Perc" name="class12Perc" min="0" max="100" step="0.01" placeholder="%" />
+        </div>
+      </div>
+      <button type="button" id="saveCollegeBtn" disabled>Save and Proceed</button>
+    </div>
+  </form>
+
+  <!-- Step 3: Residential Details -->
+  <form id="step3" class="step" novalidate>
+    <div class="form-group">
+      <label for="resState">State</label>
+      <select id="resState" name="resState" required>
+        <option value="" selected>Select State</option>
+        <option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Tamil Nadu</option><option>Telangana</option><option>Uttar Pradesh</option><option>West Bengal</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="resCity">City</label>
+      <select id="resCity" name="resCity" required>
+        <option value="" selected>Select City</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="addressDesc">Address Description</label>
+      <textarea id="addressDesc" name="addressDesc" placeholder="Enter full address details"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="pincode">Pincode</label>
+      <input type="text" id="pincode" name="pincode" placeholder="Enter pincode" required />
+    </div>
+    <button type="button" id="finishBtn" disabled>Finish and Save Profile</button>
+  </form>
+</div>
+
+<script>
+  let currentStep = 1;
+  function showStep(step) {
+    document.getElementById('step1').style.display = step === 1 ? 'block' : 'none';
+    document.getElementById('step2').style.display = step === 2 ? 'block' : 'none';
+    document.getElementById('step3').style.display = step === 3 ? 'block' : 'none';
+    document.getElementById('backBtn').style.display = step > 1 ? 'block' : 'none';
+    document.getElementById('stepTitle').textContent = 'Step ' + step + ': ' + (step === 1 ? 'Personal Profile' : step === 2 ? 'Academic Details' : 'Residential Details');
+    document.querySelector('.progress-bar').style.width = (step / 3 * 100)+ '%';
+    currentStep = step;
+  }
+
+  function prevStep() {
+    if(currentStep > 1) showStep(currentStep - 1);
+  }
+
+  showStep(1);
+
+  // Step 1 form and Next button
+  const step1Form = document.getElementById('step1');
+  const nextBtn1 = document.getElementById('nextBtn1');
+  step1Form.addEventListener('input', () => {
+    nextBtn1.disabled = !step1Form.checkValidity();
+  });
+  nextBtn1.onclick = function() {
+    if(!step1Form.checkValidity()) { step1Form.reportValidity(); return; }
+    // Save personal data
+    const profileData = {
+      name: step1Form.name.value,
+      fatherName: step1Form.fatherName.value,
+      motherName: step1Form.motherName.value,
+      dob: step1Form.dob.value,
+      contact: step1Form.contact.value,
+      financial: step1Form.financial.value,
+      parentContact: step1Form.parentContact.value
+    };
+    localStorage.setItem('profileData', JSON.stringify(profileData));
+    showStep(2);
+  };
+
+  // Step 2 logic
+  const step2Form = document.getElementById('step2');
+  const academicRadios = [...document.getElementsByName('status')];
+  const schoolSection = document.getElementById('schoolSection');
+  const collegeSection = document.getElementById('collegeSection');
+  const saveSchoolBtn = document.getElementById('saveSchoolBtn');
+  const saveCollegeBtn = document.getElementById('saveCollegeBtn');
+  const additionalPerc = document.getElementById('additionalPerc');
+
+  function updateAcademicSectionDisplay(){
+    const selected = academicRadios.find(r => r.checked);
+    if (!selected) {
+      schoolSection.style.display = 'none';
+      collegeSection.style.display = 'none';
+      saveSchoolBtn.disabled = true;
+      saveCollegeBtn.disabled = true;
+      return;
+    }
+    if (selected.value === 'School'){
+      schoolSection.style.display = 'block';
+      collegeSection.style.display = 'none';
+    } else {
+      schoolSection.style.display = 'none';
+      collegeSection.style.display = 'block';
+    }
+    saveSchoolBtn.disabled = selected.value !== 'School' || !schoolSection.querySelector('input, select').checkValidity();
+    saveCollegeBtn.disabled = selected.value !== 'College' || !collegeSection.querySelector('input, select').checkValidity();
+  }
+
+  academicRadios.forEach(radio => {
+    radio.addEventListener('change', updateAcademicSectionDisplay);
+  });
+
+  step2Form.addEventListener('input', () => {
+    updateAcademicSectionDisplay();
+  });
+
+  saveSchoolBtn.onclick = () => {
+    if(!schoolSection.querySelector('input, select').checkValidity()){
+      schoolSection.querySelector('input, select').reportValidity();
+      return;
+    }
+    const data = {
+      status: 'School',
+      schoolName: document.getElementById('schoolName').value,
+      schoolState: document.getElementById('schoolState').value,
+      schoolClass: document.getElementById('schoolClass').value,
+      schoolPercent: document.getElementById('schoolPercent').value,
+      schoolDesc: document.getElementById('schoolDesc').value
+    };
+    localStorage.setItem('academicData', JSON.stringify(data));
+    showStep(3);
+  };
+
+  saveCollegeBtn.onclick = () => {
+    if(!collegeSection.querySelector('input, select').checkValidity()){
+      collegeSection.querySelector('input, select').reportValidity();
+      return;
+    }
+    const data = {
+      status: 'College',
+      collegeName: document.getElementById('collegeName').value,
+      collegeState: document.getElementById('collegeState').value,
+      collegeCourse: document.getElementById('collegeCourse').value,
+      collegeYear: document.getElementById('collegeYear').value,
+      class10Perc: document.getElementById('class10Perc').value,
+      class12Perc: document.getElementById('class12Perc').value
+    };
+    localStorage.setItem('academicData', JSON.stringify(data));
+    showStep(3);
+  };
+
+  // Step 3 logic - Residential
+  const step3Form = document.getElementById('step3');
+  const resState = document.getElementById('resState');
+  const resCity = document.getElementById('resCity');
+  const finishBtn = document.getElementById('finishBtn');
+
+  const cityByState = {
+    "Andhra Pradesh": ["Adoni","Amaravati","Anantapur","Chandragiri","Chittoor","Dowlaiswaram","Eluru","Guntur","Kadapa","Kakinada","Kurnool","Machilipatnam","Nagarjunikonda","Nellore","Ongole","Rajahmundry","Srikakulam","Tirupati","Vijayawada","Visakhapatnam","Vizianagaram","Yemmiganur"],
+    Assam: ["Dhuburi","Dibrugarh","Dispur","Guwahati","Jorhat","Nagaon","Sivasagar","Silchar","Tezpur","Tinsukia","Nalbari","North Lakhimpur"],
+    Bihar: ["Ara","Barauni","Begusarai","Bettiah","Bhagalpur","Bihar Sharif","Bodh Gaya","Buxar","Chapra","Darbhanga","Dehri","Dinapur Nizamat","Gaya","Hajipur","Jamalpur","Katihar","Madhubani","Motihari","Munger","Muzaffarpur","Patna","Purnia","Pusa","Saharsa","Samastipur","Sasaram","Sitamarhi","Siwan","Vaishali"],
+    "Chhattisgarh": ["Ambikapur","Bhilai","Bilaspur","Dhamtari","Durg","Jagdalpur","Korba","Raigarh","Raipur","Rajnandgaon"],
+    Gujarat: ["Ahmedabad","Amreli","Bharuch","Bhavnagar","Bhuj","Dwarka","Gandhinagar","Godhra","Jamnagar","Junagadh","Kandla","Khambhat","Kheda","Mahesana","Morbi","Nadiad","Navsari","Okha","Palanpur","Patan","Porbandar","Rajkot","Surat","Surendranagar","Valsad","Veraval","Vadodara"],
+    Haryana: ["Ambala","Bhiwani","Charkhi Dadri","Faridabad","Gurugram","Hansi","Hisar","Jind","Kaithal","Karnal","Kurukshetra","Panipat","Panchkula","Rewari","Rohtak","Sirsa","Sonipat","Yamunanagar"],
+    "Himachal Pradesh": ["Bilaspur","Chamba","Dalhousie","Dharamshala","Hamirpur","Kangra","Kullu","Mandi","Nahan","Shimla","Sirmaur","Solan","Una"],
+    Jharkhand: ["Bokaro","Chaibasa","Deoghar","Dhanbad","Dumka","Giridih","Hazaribag","Jamshedpur","Jharia","Ranchi","Saraikela"],
+    Karnataka: ["Badami","Ballari","Bengaluru","Belagavi","Bhadravati","Bidar","Chikkamagaluru","Chitradurga","Davangere","Halebid","Hassan","Hubballi-Dharwad","Kalaburagi","Kolar","Madikeri","Mandya","Mangaluru","Mysuru","Raichur","Shivamogga","Shravanabelagola","Shrirangapattana","Tumakuru","Vijayapura","Udupi"],
+    Kerala: ["Alappuzha","Angamaly","Kollam","Kannur","Kochi","Kottayam","Kozhikode","Malappuram","Palakkad","Thalassery","Thiruvananthapuram","Thrissur","Vatakara"],
+    "Madhya Pradesh": ["Balaghat","Barwani","Betul","Bhopal","Burhanpur","Chhatarpur","Chhindwara","Damoh","Datia","Dewas","Dhar","Guna","Gwalior","Hoshangabad","Indore","Itarsi","Jabalpur","Jhabua","Khajuraho","Khandwa","Khargone","Mandla","Mandsaur","Morena","Narsinghpur","Neemuch","Panna","Raisen","Rajgarh","Ratlam","Rewa","Sagar","Satna","Sehore","Seoni","Shahdol","Shivpuri","Ujjain","Vidisha"],
+    Maharashtra: ["Mumbai","Pune","Nagpur","Nashik","Aurangabad","Thane","Solapur","Kolhapur","Amravati","Nanded","Jalgaon","Akola","Ahmednagar","Latur"],
+    Odisha: ["Bhubaneswar","Cuttack","Rourkela","Sambalpur","Berhampur","Balasore","Baripada","Jharsuguda"],
+    Punjab: ["Ludhiana","Amritsar","Jalandhar","Patiala","Bathinda","Mohali","Moga","Pathankot"],
+    Rajasthan: ["Jaipur","Udaipur","Jodhpur","Ajmer","Alwar","Bharatpur","Bikaner","Kota","Sikar","Tonk"],
+    "Tamil Nadu": ["Chennai","Coimbatore","Madurai","Salem","Tiruchirappalli","Tirunelveli","Vellore","Erode","Thoothukudi","Kanchipuram","Hosur","Karaikudi","Cuddalore","Dindigul","Nagercoil"],
+    Telangana: ["Hyderabad","Warangal","Karimnagar","Khammam","Mahbubnagar","Nizamabad","Sangareddi","Ramagundam"],
+    "Uttar Pradesh": ["Lucknow","Kanpur","Ghaziabad","Agra","Varanasi","Meerut","Allahabad (Prayagraj)","Aligarh","Noida","Moradabad","Bareilly","Mathura","Saharanpur","Budaun","Firozabad","Jhansi","Shahjahanpur"],
+    "West Bengal": ["Kolkata","Siliguri","Durgapur","Asansol","Howrah","Darjeeling","Kharagpur","Bardhaman","Jalpaiguri"]
+  };
+
+  resState.addEventListener('change', () => {
+    const state = resState.value;
+    resCity.innerHTML = '<option value="">Select City</option>';
+    if(cityByState[state]){
+      cityByState[state].forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        resCity.appendChild(option);
+      });
+    }
+  });
+
+  step3Form.addEventListener('input', () => {
+    finishBtn.disabled = !step3Form.checkValidity();
+  });
+
+  finishBtn.onclick = () => {
+    if(!step3Form.checkValidity()){
+      step3Form.reportValidity();
+      return;
+    }
+    const residentialData = {
+      state: resState.value,
+      city: resCity.value,
+      addressDesc: document.getElementById('addressDesc').value,
+      pincode: document.getElementById('pincode').value
+    };
+    localStorage.setItem('residentialData', JSON.stringify(residentialData));
+    alert('Congratulations! Your profile has been successfully created.');
+  };
+</script>
+</body>
+</html>

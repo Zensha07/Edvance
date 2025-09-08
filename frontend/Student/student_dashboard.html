@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sponsor Dashboard - Edvance</title>
+  <title>Student Dashboard - Edvance</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
     body {
@@ -28,7 +27,7 @@
     .dropdown {
       position: relative;
       display: inline-block;
-      margin-right: auto; /* push dashboard text right */
+      margin-right: auto;
     }
     .dropbtn {
       font-size: 1.6rem;
@@ -48,7 +47,6 @@
       outline: none;
       background-color: rgba(255,255,255,0.15);
     }
-    
     .caret {
       border-top: 6px solid white;
       border-left: 5px solid transparent;
@@ -58,7 +56,6 @@
       display: inline-block;
       margin-left: 4px;
     }
-    /* Dropdown content */
     .dropdown-content {
       display: none;
       position: absolute;
@@ -92,13 +89,12 @@
     .dropdown.show .dropdown-content {
       display: block;
     }
-
     main {
       display: flex;
       gap: 36px;
       justify-content: center;
       align-items: center;
-      padding: 30px 30px 80px 30px;
+      padding: 30px;
       flex-wrap: wrap;
       max-width: 960px;
       margin: 0 auto;
@@ -158,28 +154,28 @@
         &#9776; Menu <span class="caret"></span>
       </button>
       <div class="dropdown-content" id="dropdownMenu" role="menu">
-        <a href="#" id="ddProfile" role="menuitem" tabindex="0">Profile</a>
-        <a href="#" id="ddAddSponsorship" role="menuitem" tabindex="0">Add Sponsorship</a>
-        <a href="#" id="ddStudentApproaches" role="menuitem" tabindex="0">Student Approaches</a>
+        <a href="#" id="ddProfile" role="menuitem" tabindex="0">Student Profile</a>
+        <a href="#" id="ddAvailableScholarship" role="menuitem" tabindex="0">Available Scholarship/Sponsorship</a>
+        <a href="#" id="ddCareerCounselling" role="menuitem" tabindex="0">Career Counselling</a>
+        <a href="#" id="ddStudyMaterials" role="menuitem" tabindex="0">Study Materials</a>
         <a href="#" id="ddLogout" role="menuitem" tabindex="0">Logout</a>
       </div>
     </div>
-    <div style="margin-left: 20px; font-size: 2.8rem; font-weight: 700; color: white; user-select: none;">
-      Dashboard
+    <div style="margin-left:20px; font-size:2.8rem; font-weight:700; color:white; user-select:none;">
+      Student Dashboard
     </div>
   </header>
 
   <main>
-    <!-- Profile Panel -->
     <div class="panel" id="profilePanel" title="View and edit your profile" tabindex="0">
       <div class="panel-logo">
-        <img src="https://cdn-icons-png.flaticon.com/512/2922/2922506.png" alt="Male profile" />
+        <!-- Replaced with feminine student icon -->
+        <img src="https://cdn-icons-png.flaticon.com/512/8017/8017780.png" alt="Female student profile" />
       </div>
-      <div class="panel-label">Profile</div>
+      <div class="panel-label">Student Profile</div>
     </div>
 
-    <!-- Add Sponsorship Panel -->
-    <div class="panel" id="addSponsorshipPanel" title="Add sponsorship offers" tabindex="0">
+    <div class="panel" id="availableScholarshipPanel" title="View available scholarships and sponsorships" tabindex="0">
       <div class="panel-logo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="gold" stroke="darkgoldenrod" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" width="46" height="46">
           <circle cx="32" cy="32" r="28" />
@@ -190,82 +186,84 @@
           <line x1="25" y1="42" x2="39" y2="22" />
         </svg>
       </div>
-      <div class="panel-label">Add Sponsorship</div>
+      <div class="panel-label">Available Scholarship/Sponsorship</div>
     </div>
 
-    <!-- Student Approaches Panel -->
-    <div class="panel" id="studentApproachesPanel" title="View students eligible for sponsorship" tabindex="0">
+    <div class="panel" id="careerCounsellingPanel" title="Get career counselling help" tabindex="0">
       <div class="panel-logo">
-        <img src="https://cdn-icons-png.flaticon.com/512/2922/2922560.png" alt="Female student" />
+        <img src="https://cdn-icons-png.flaticon.com/512/1005/1005144.png" alt="Career counselling" style="height:56px;" />
       </div>
-      <div class="panel-label">Student Approaches</div>
+      <div class="panel-label">Career Counselling</div>
+    </div>
+
+    <div class="panel" id="studyMaterialsPanel" title="Access study materials" tabindex="0">
+      <div class="panel-logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/2306/2306925.png" alt="Study materials" style="height:56px;" />
+      </div>
+      <div class="panel-label">Study Materials</div>
     </div>
   </main>
 
-  <script>
-    let profileCompleted = false; // Toggle for example profile state
+<script>
+  const dropdown = document.getElementById('dashboardDropdown');
+  const dropbtn = dropdown.querySelector('.dropbtn');
+  const dropdownContent = dropdown.querySelector('.dropdown-content');
 
-    // Dropdown Menu toggle
-    const dropdown = document.getElementById('dashboardDropdown');
-    const dropbtn = dropdown.querySelector('.dropbtn');
-    const dropdownContent = dropdown.querySelector('.dropdown-content');
+  dropbtn.addEventListener('click', () => {
+    const isExpanded = dropbtn.getAttribute('aria-expanded') === 'true';
+    dropbtn.setAttribute('aria-expanded', !isExpanded);
+    dropdown.classList.toggle('show');
+  });
 
-    dropbtn.addEventListener('click', () => {
-      const isExpanded = dropbtn.getAttribute('aria-expanded') === 'true';
-      dropbtn.setAttribute('aria-expanded', !isExpanded);
-      dropdown.classList.toggle('show');
-    });
+  window.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target)) {
+      dropdown.classList.remove('show');
+      dropbtn.setAttribute('aria-expanded', 'false');
+    }
+  });
 
-    // Close dropdown if click outside
-    window.addEventListener('click', function(e) {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('show');
-        dropbtn.setAttribute('aria-expanded', false);
+  // Navigation handlers
+  function goToStudentProfile() {
+    window.location.href = 'student_profile.html';
+  }
+  function goToAvailableScholarship() {
+    window.location.href = 'available_scholarship.html';
+  }
+  function goToCareerCounselling() {
+    window.location.href = 'career_counselling.html';
+  }
+  function goToStudyMaterials() {
+    window.location.href = 'study_materials.html';
+  }
+  function logout() {
+    alert('Logging out...');
+    // Clear session/tokens here
+    window.location.href = 'login.html';
+  }
+
+  // Dropdown menu event listeners
+  document.getElementById('ddProfile').addEventListener('click', goToStudentProfile);
+  document.getElementById('ddAvailableScholarship').addEventListener('click', goToAvailableScholarship);
+  document.getElementById('ddCareerCounselling').addEventListener('click', goToCareerCounselling);
+  document.getElementById('ddStudyMaterials').addEventListener('click', goToStudyMaterials);
+  document.getElementById('ddLogout').addEventListener('click', logout);
+
+  // Panel click event listeners
+  document.getElementById('profilePanel').addEventListener('click', goToStudentProfile);
+  document.getElementById('availableScholarshipPanel').addEventListener('click', goToAvailableScholarship);
+  document.getElementById('careerCounsellingPanel').addEventListener('click', goToCareerCounselling);
+  document.getElementById('studyMaterialsPanel').addEventListener('click', goToStudyMaterials);
+
+  // Keyboard accessibility for panels
+  const panels = document.querySelectorAll('.panel');
+  panels.forEach(panel => {
+    panel.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        panel.click();
       }
     });
-
-    // Navigation functions
-    function goToProfile() {
-      window.location.href = 'sponsor_profile.html';
-    }
-    function goToAddSponsorship() {
-      if (!profileCompleted) {
-        alert('Please complete your profile before adding sponsorships.');
-        goToProfile();
-      } else {
-        window.location.href = 'add_sponsorship.html';
-      }
-    }
-    function goToStudentApproaches() {
-      window.location.href = 'student_approaches.html';
-    }
-    function logout() {
-      alert('Logging out...');
-      // Clear session or tokens here if any
-      window.location.href = 'login_sponsor.html';
-    }
-
-    // Dropdown item event listeners
-    document.getElementById('ddProfile').addEventListener('click', goToProfile);
-    document.getElementById('ddAddSponsorship').addEventListener('click', goToAddSponsorship);
-    document.getElementById('ddStudentApproaches').addEventListener('click', goToStudentApproaches);
-    document.getElementById('ddLogout').addEventListener('click', logout);
-
-    // Panel click event listeners (same as dropdown)
-    document.getElementById('profilePanel').addEventListener('click', goToProfile);
-    document.getElementById('addSponsorshipPanel').addEventListener('click', goToAddSponsorship);
-    document.getElementById('studentApproachesPanel').addEventListener('click', goToStudentApproaches);
-
-    // Keyboard accessibility for panels
-    const panels = document.querySelectorAll('.panel');
-    panels.forEach(panel => {
-      panel.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          panel.click();
-        }
-      });
-    });
-  </script>
+  });
+</script>
 </body>
 </html>
