@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload Lecture Notes - Teacher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #c3ddf9 0%, #ebf3fb 100%);
+      margin: 40px;
+      color: #222;
+    }
+    .container {
+      max-width: 480px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+    h1 {
+      color: #0b3d91;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #555;
+    }
+    select, input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 2px solid #ccd7e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    select:focus, input[type="text"]:focus, input[type="file"]:focus {
+      outline: none;
+      border-color: #0b3d91;
+      box-shadow: 0 0 7px rgba(11, 61, 145, 0.25);
+    }
+    button {
+      margin-top: 24px;
+      width: 100%;
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1838a1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload Lecture Notes</h1>
+    <form id="uploadNotesForm">
+      <label for="standard">Select Standard</label>
+      <select id="standard" required>
+        <option value="" disabled selected>Choose standard</option>
+        <option>Class 6</option>
+        <option>Class 7</option>
+        <option>Class 8</option>
+        <option>Class 9</option>
+        <option>Class 10</option>
+        <option>Class 11</option>
+        <option>Class 12</option>
+      </select>
+      
+      <label for="subject">Select Subject</label>
+      <select id="subject" required>
+        <option value="" disabled selected>Choose subject</option>
+        <option>Mathematics</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Biology</option>
+        <option>English</option>
+        <option>History</option>
+        <option>Geography</option>
+      </select>
+      
+      <label for="topic">Topic</label>
+      <input type="text" id="topic" placeholder="Enter topic" required />
+      
+      <label for="notesPdf">Upload Lecture Notes (PDF)</label>
+      <input type="file" id="notesPdf" accept="application/pdf" required />
+      
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('uploadNotesForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const standard = document.getElementById('standard').value;
+      const subject = document.getElementById('subject').value;
+      const topic = document.getElementById('topic').value.trim();
+      const pdfInput = document.getElementById('notesPdf');
+      
+      if (!pdfInput.files.length) {
+        alert('Please select a PDF file to upload.');
+        return;
+      }
+
+      const file = pdfInput.files[0];
+      if (file.type !== 'application/pdf') {
+        alert('Only PDF files are allowed!');
+        return;
+      }
+
+      // Normally here you would send form data and file to backend
+      alert(`Standard: ${standard}\nSubject: ${subject}\nTopic: ${topic}\nFile: ${file.name}\n\n(Submission simulated)`);
+
+      // Clear form after submission
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
