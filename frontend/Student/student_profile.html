@@ -390,100 +390,10 @@
   
   function editProfile() {
     console.log('Edit profile clicked');
-    // Load existing profile data into the form
-    loadProfileIntoForm();
+    // Simply reload the page to show the form
+    window.location.reload();
   }
   
-  function loadProfileIntoForm() {
-    console.log('Loading profile into form...');
-    // Fetch existing profile data and populate the form
-    fetch('http://localhost:5001/api/student/profile')
-      .then(response => response.json())
-      .then(result => {
-        console.log('Profile data received:', result);
-        if (result.profile) {
-          const profile = result.profile;
-          
-          // Populate personal data
-          if (profile.personal) {
-            document.getElementById('name').value = profile.personal.name || '';
-            document.getElementById('fatherName').value = profile.personal.fatherName || '';
-            document.getElementById('motherName').value = profile.personal.motherName || '';
-            document.getElementById('dob').value = profile.personal.dob || '';
-            document.getElementById('contact').value = profile.personal.contact || '';
-            document.getElementById('parentContact').value = profile.personal.parentContact || '';
-            document.getElementById('financial').value = profile.personal.financial || '';
-          }
-          
-          // Populate academic data
-          if (profile.academic) {
-            const status = profile.academic.status;
-            if (status === 'School') {
-              document.getElementById('schoolRadio').checked = true;
-              document.getElementById('schoolSection').style.display = 'block';
-              document.getElementById('collegeSection').style.display = 'none';
-              document.getElementById('schoolName').value = profile.academic.schoolName || '';
-              document.getElementById('schoolState').value = profile.academic.schoolState || '';
-              document.getElementById('schoolClass').value = profile.academic.schoolClass || '';
-              document.getElementById('schoolPercent').value = profile.academic.schoolPercent || '';
-              document.getElementById('schoolDesc').value = profile.academic.schoolDesc || '';
-            } else if (status === 'College') {
-              document.getElementById('collegeRadio').checked = true;
-              document.getElementById('collegeSection').style.display = 'block';
-              document.getElementById('schoolSection').style.display = 'none';
-              document.getElementById('collegeName').value = profile.academic.collegeName || '';
-              document.getElementById('collegeState').value = profile.academic.collegeState || '';
-              document.getElementById('collegeCourse').value = profile.academic.collegeCourse || '';
-              document.getElementById('collegeYear').value = profile.academic.collegeYear || '';
-              document.getElementById('class10Perc').value = profile.academic.class10Perc || '';
-              document.getElementById('class12Perc').value = profile.academic.class12Perc || '';
-              
-              // Show additional percentage fields for college
-              document.getElementById('additionalPerc').style.display = 'block';
-            }
-          }
-          
-          // Populate residential data
-          if (profile.residential) {
-            document.getElementById('resState').value = profile.residential.state || '';
-            
-            // Trigger city dropdown update
-            const state = profile.residential.state;
-            if (state && cityByState[state]) {
-              const resCity = document.getElementById('resCity');
-              resCity.innerHTML = '<option value="">Select City</option>';
-              cityByState[state].forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                resCity.appendChild(option);
-              });
-              
-              // Set city after options are loaded
-              setTimeout(() => {
-                document.getElementById('resCity').value = profile.residential.city || '';
-              }, 100);
-            }
-            
-            document.getElementById('addressDesc').value = profile.residential.addressDesc || '';
-            document.getElementById('pincode').value = profile.residential.pincode || '';
-          }
-          
-          // Show the form and hide profile display
-          document.querySelector('.container').innerHTML = originalFormHTML;
-          
-          // Re-initialize the form after replacing HTML
-          setTimeout(() => {
-            initializeForm();
-          }, 100);
-        }
-      })
-      .catch(error => {
-        console.error('Error loading profile:', error);
-        // If error, just reload the page
-        window.location.reload();
-      });
-  }
   
   // Store original form HTML
   const originalFormHTML = document.querySelector('.container').innerHTML;
@@ -902,6 +812,91 @@
       alert('Error saving profile: ' + error.message + '. Please make sure the Flask server is running on port 5001.');
     }
   };
+
+  // Initialize page - check if profile exists and load it
+  document.addEventListener('DOMContentLoaded', function() {
+    loadExistingProfile();
+  });
+
+  async function loadExistingProfile() {
+    try {
+      const response = await fetch('http://localhost:5001/api/student/profile');
+      const result = await response.json();
+      
+      if (result.success && result.profile) {
+        const profile = result.profile;
+        console.log('Loading existing profile:', profile);
+        
+        // Populate personal data
+        if (profile.personal) {
+          document.getElementById('name').value = profile.personal.name || '';
+          document.getElementById('fatherName').value = profile.personal.fatherName || '';
+          document.getElementById('motherName').value = profile.personal.motherName || '';
+          document.getElementById('dob').value = profile.personal.dob || '';
+          document.getElementById('contact').value = profile.personal.contact || '';
+          document.getElementById('parentContact').value = profile.personal.parentContact || '';
+          document.getElementById('financial').value = profile.personal.financial || '';
+        }
+        
+        // Populate academic data
+        if (profile.academic) {
+          const status = profile.academic.status;
+          if (status === 'School') {
+            document.getElementById('schoolRadio').checked = true;
+            document.getElementById('schoolSection').style.display = 'block';
+            document.getElementById('collegeSection').style.display = 'none';
+            document.getElementById('schoolName').value = profile.academic.schoolName || '';
+            document.getElementById('schoolState').value = profile.academic.schoolState || '';
+            document.getElementById('schoolClass').value = profile.academic.schoolClass || '';
+            document.getElementById('schoolPercent').value = profile.academic.schoolPercent || '';
+            document.getElementById('schoolDesc').value = profile.academic.schoolDesc || '';
+          } else if (status === 'College') {
+            document.getElementById('collegeRadio').checked = true;
+            document.getElementById('collegeSection').style.display = 'block';
+            document.getElementById('schoolSection').style.display = 'none';
+            document.getElementById('collegeName').value = profile.academic.collegeName || '';
+            document.getElementById('collegeState').value = profile.academic.collegeState || '';
+            document.getElementById('collegeCourse').value = profile.academic.collegeCourse || '';
+            document.getElementById('collegeYear').value = profile.academic.collegeYear || '';
+            document.getElementById('class10Perc').value = profile.academic.class10Perc || '';
+            document.getElementById('class12Perc').value = profile.academic.class12Perc || '';
+            
+            // Show additional percentage fields for college
+            document.getElementById('additionalPerc').style.display = 'block';
+          }
+        }
+        
+        // Populate residential data
+        if (profile.residential) {
+          document.getElementById('resState').value = profile.residential.state || '';
+          
+          // Trigger city dropdown update
+          const state = profile.residential.state;
+          if (state && cityByState[state]) {
+            const resCity = document.getElementById('resCity');
+            resCity.innerHTML = '<option value="">Select City</option>';
+            cityByState[state].forEach(city => {
+              const option = document.createElement('option');
+              option.value = city;
+              option.textContent = city;
+              resCity.appendChild(option);
+            });
+            
+            // Set city after options are loaded
+            setTimeout(() => {
+              document.getElementById('resCity').value = profile.residential.city || '';
+            }, 100);
+          }
+          
+          document.getElementById('addressDesc').value = profile.residential.addressDesc || '';
+          document.getElementById('pincode').value = profile.residential.pincode || '';
+        }
+      }
+    } catch (error) {
+      console.log('No existing profile found or error loading:', error);
+      // This is normal for new users, so we don't show an error
+    }
+  }
 </script>
 </body>
 </html>

@@ -25,22 +25,304 @@
       text-align: center;
       margin-bottom: 24px;
     }
-    p {
-      font-size: 1.1rem;
-      margin-bottom: 18px;
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e9ecef;
     }
-    strong {
+    .profile-header h1 {
+      margin: 0;
       color: #0b3d91;
+      font-size: 1.8rem;
+    }
+    .edit-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .edit-btn:hover {
+      background: #218838;
+    }
+    .profile-info {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .profile-field {
+      margin-bottom: 15px;
+    }
+    .profile-field:last-child {
+      margin-bottom: 0;
+    }
+    .profile-field strong {
+      color: #0b3d91;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .profile-field span {
+      color: #333;
+      font-size: 1rem;
+    }
+    .form-section {
+      display: none;
+    }
+    .form-section.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 2px solid #ccd7e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="date"]:focus {
+      outline: none;
+      border-color: #0b3d91;
+      box-shadow: 0 0 7px rgba(11, 61, 145, 0.25);
+    }
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    button {
+      flex: 1;
+      background-color: #0b3d91;
+      color: white;
+      border: none;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1838a1;
+    }
+    .cancel-btn {
+      background-color: #6c757d;
+    }
+    .cancel-btn:hover {
+      background-color: #5a6268;
+    }
+    .success-message {
+      color: green;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+    .error-message {
+      color: red;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Teacher Profile</h1>
-    <p><strong>Name:</strong> {{ name }}</p>
-    <p><strong>Qualification:</strong> {{ qualification }}</p>
-    <p><strong>Currently Teaching Where:</strong> {{ teaching_where }}</p>
-    <p><strong>Since When:</strong> {{ since_when }}</p>
+    <div class="profile-header">
+      <h1>Teacher Profile</h1>
+      <button id="editBtn" class="edit-btn">Edit Profile</button>
+    </div>
+    
+    <div id="successMessage" class="success-message">Profile updated successfully!</div>
+    <div id="errorMessage" class="error-message"></div>
+    
+    <div id="profileDisplay" class="profile-section">
+      <div class="profile-info">
+        <div class="profile-field">
+          <strong>Name:</strong>
+          <span id="displayName">{{ name }}</span>
+        </div>
+        <div class="profile-field">
+          <strong>Qualification:</strong>
+          <span id="displayQualification">{{ qualification }}</span>
+        </div>
+        <div class="profile-field">
+          <strong>Currently Teaching Where:</strong>
+          <span id="displayTeachingWhere">{{ teaching_where }}</span>
+        </div>
+        <div class="profile-field">
+          <strong>Since When:</strong>
+          <span id="displaySinceWhen">{{ since_when }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div id="profileForm" class="form-section">
+      <form id="teacherForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required placeholder="Enter your full name" />
+
+        <label for="qualification">Qualification</label>
+        <input type="text" id="qualification" name="qualification" required placeholder="Your qualification" />
+
+        <label for="teachingWhere">Currently Teaching Where</label>
+        <input type="text" id="teachingWhere" name="teachingWhere" required placeholder="Institution name" />
+
+        <label for="sinceWhen">Since When</label>
+        <input type="date" id="sinceWhen" name="sinceWhen" required />
+
+        <div class="form-buttons">
+          <button type="submit">Update Profile</button>
+          <button type="button" id="cancelBtn" class="cancel-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
+
+  <script>
+    const editBtn = document.getElementById('editBtn');
+    const profileDisplay = document.getElementById('profileDisplay');
+    const profileForm = document.getElementById('profileForm');
+    const teacherForm = document.getElementById('teacherForm');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let currentProfile = null;
+
+    // Load profile data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProfile();
+    });
+
+    // Load profile from API
+    async function loadProfile() {
+      try {
+        const response = await fetch('/api/teacher/profile');
+        const result = await response.json();
+        
+        if (result.success) {
+          currentProfile = result.profile;
+          displayProfile(result.profile);
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      }
+    }
+
+    // Display profile information
+    function displayProfile(profile) {
+      document.getElementById('displayName').textContent = profile.name;
+      document.getElementById('displayQualification').textContent = profile.qualification;
+      document.getElementById('displayTeachingWhere').textContent = profile.teaching_where;
+      
+      // Format date for display
+      try {
+        const date = new Date(profile.since_when);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        document.getElementById('displaySinceWhen').textContent = formattedDate;
+      } catch (error) {
+        document.getElementById('displaySinceWhen').textContent = profile.since_when;
+      }
+      
+      profileDisplay.style.display = 'block';
+      profileForm.style.display = 'none';
+    }
+
+    // Show form for editing
+    function showForm() {
+      if (currentProfile) {
+        // Populate form with existing data
+        document.getElementById('name').value = currentProfile.name;
+        document.getElementById('qualification').value = currentProfile.qualification;
+        document.getElementById('teachingWhere').value = currentProfile.teaching_where;
+        document.getElementById('sinceWhen').value = currentProfile.since_when;
+      }
+      
+      profileDisplay.style.display = 'none';
+      profileForm.style.display = 'block';
+    }
+
+    // Edit button click
+    editBtn.addEventListener('click', function() {
+      showForm();
+    });
+
+    // Cancel edit
+    cancelBtn.addEventListener('click', function() {
+      profileDisplay.style.display = 'block';
+      profileForm.style.display = 'none';
+      hideMessages();
+    });
+
+    // Form submission
+    teacherForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      hideMessages();
+
+      const formData = {
+        name: document.getElementById('name').value,
+        qualification: document.getElementById('qualification').value,
+        teaching_where: document.getElementById('teachingWhere').value,
+        since_when: document.getElementById('sinceWhen').value
+      };
+
+      try {
+        const response = await fetch('/api/teacher/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          successMessage.style.display = 'block';
+          currentProfile = { ...currentProfile, ...formData };
+          displayProfile(currentProfile);
+          
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 3000);
+        } else {
+          errorMessage.textContent = 'Error: ' + result.message;
+          errorMessage.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        errorMessage.textContent = 'Error updating profile: ' + error.message;
+        errorMessage.style.display = 'block';
+      }
+    });
+
+    function hideMessages() {
+      successMessage.style.display = 'none';
+      errorMessage.style.display = 'none';
+    }
+  </script>
 </body>
 </html>

@@ -196,6 +196,75 @@ def profile():
                            teaching_where=teaching_where,
                            since_when=since_when_formatted)
 
+# Teacher Profile API endpoints
+@app.route('/api/teacher/profile', methods=['GET'])
+def get_teacher_profile():
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('SELECT id, name, qualification, teaching_where, since_when FROM teacher_profile LIMIT 1')
+        row = c.fetchone()
+        conn.close()
+
+        if not row:
+            return jsonify({'success': False, 'message': 'No teacher profile found'}), 404
+
+        profile = {
+            'id': row[0],
+            'name': row[1],
+            'qualification': row[2],
+            'teaching_where': row[3],
+            'since_when': row[4]
+        }
+
+        return jsonify({'success': True, 'profile': profile})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/teacher/profile', methods=['PUT'])
+def update_teacher_profile():
+    try:
+        data = request.get_json()
+        
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # Check if profile exists
+        c.execute('SELECT id FROM teacher_profile LIMIT 1')
+        existing_profile = c.fetchone()
+        
+        if existing_profile:
+            # Update existing profile
+            c.execute('''
+                UPDATE teacher_profile 
+                SET name = ?, qualification = ?, teaching_where = ?, since_when = ?
+                WHERE id = ?
+            ''', (
+                data.get('name'),
+                data.get('qualification'),
+                data.get('teaching_where'),
+                data.get('since_when'),
+                existing_profile[0]
+            ))
+        else:
+            # Create new profile
+            c.execute('''
+                INSERT INTO teacher_profile (name, qualification, teaching_where, since_when)
+                VALUES (?, ?, ?, ?)
+            ''', (
+                data.get('name'),
+                data.get('qualification'),
+                data.get('teaching_where'),
+                data.get('since_when')
+            ))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'Profile updated successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 
 # Student Profile API endpoints
 @app.route('/api/student/profile', methods=['GET'])
